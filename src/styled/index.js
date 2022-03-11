@@ -55,7 +55,7 @@ export const Tile = styled.div`
   justify-content: center;
   align-items: center;
 
-  border: 2px solid #3a3a3c;
+  border: 2px solid #828282;
   font-size: 3.2rem;
   font-weight: bold;
   line-height: 3.2rem;
@@ -69,7 +69,7 @@ export const Tile = styled.div`
       return `background-color: #b59f3b;`;
     }
     if (hint === "grey") {
-      return `background-color: #3a3a3c;`;
+      return `background-color: #828282;`;
     }
   }}
 

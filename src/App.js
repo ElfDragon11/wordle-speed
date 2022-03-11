@@ -21,6 +21,9 @@ import { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 
 var started=false;
+const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
+const LOCAL_STORAGE_KEY_ANSWERED_WORDS_MARKERS="wordlespeed.answers.markers";
+
 
 const API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en";
 
@@ -53,6 +56,11 @@ const fetchWord = (word) => {
 };
 
 function App() {
+
+
+
+  
+
 
   var [TimerStatus, setTimerStatus] = useState('off')
   const wordOfTheDay = "money";
@@ -127,8 +135,11 @@ function App() {
         }
       });
     }
-
+    localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
+    
     setMarkers(updatedMarkers);
+    localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS_MARKERS,JSON.stringify(markers))
+    console.log(markers);
     round.current = _round + 1;
     letterIndex.current = 0;
   };
@@ -153,8 +164,11 @@ function App() {
       started=true;
       setTimerStatus("running")
     }
+    //console.log(pressedKey);
     const _letterIndex = letterIndex.current;
     const _round = round.current;
+
+    //console.log(_letterIndex);
 
     if (_letterIndex < wordLength) {
       setGuesses((prev) => {
@@ -168,7 +182,12 @@ function App() {
   };
 
   const enterGuess = async (pressedKey) => {
+    console.log(pressedKey);
+    console.log(round.current);
+    console.log(guesses);
     if (pressedKey === "enter" && !guesses[round.current].includes("")) {
+      console.log("enter Pressed");
+      //change this to check against a valid word array
       const validWord = await fetchWord(guesses[round.current].join(""));
 
       if (Array.isArray(validWord)) {
@@ -234,13 +253,47 @@ function App() {
     }
   };
 
+
   useEffect(() => {
+
+    const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS));
+
+    var guessesMadeArray;
+    console.log(guessesMade);
+    console.log(guesses);
+    if(guessesMade!=null){
+      round.current=0;
+      let end = false;
+      guessesMadeArray = Object.values(guessesMade);
+      guessesMadeArray.forEach((item) => {
+          item.forEach((letter)=>{
+            if(letter!==''){
+            handleClick(letter);
+            }else{
+              end = true;
+            }
+          });
+          if(end=== false){
+            handleClick("enter");
+          }
+         
+          console.log("here");
+        
+        
+        
+       
+        
+      });
+      
+    }
+
     Modal.setAppElement("#share");
 
     document.addEventListener("keydown", handleKeyDown);
-
+ 
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+  
 
   return (
     <>
