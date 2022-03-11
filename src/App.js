@@ -22,14 +22,13 @@ import Modal from "react-modal";
 import { listWords, validWords } from './listWords';
 
 var started=false;
-
+var winStatus = "Win";
 const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
 
 
 const dayLength = 86400000;
-const startTime = 1646895600000-(dayLength*3);
+const startTime = 1646895600000-(dayLength*4);
 
-const API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en";
 
 const keyboardRows = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -50,21 +49,9 @@ const newGame = {
   5: Array.from({ length: wordLength }).fill(""),
 };
 
-const fetchWord = (word) => {
-  return fetch(`${API_URL}/${word}`, {
-    method: "GET",
-  })
-    .then((res) => res.json())
-    .then((res) => res)
-    .catch((err) => console.log("err:", err));
-};
+
 
 function App() {
-
-
-
-  
-
 
   const [TimerStatus, setTimerStatus] = useState('off')
  
@@ -89,6 +76,13 @@ function App() {
 
   const win = () => {
     document.removeEventListener("keydown", handleKeyDown);
+    setTimerStatus("off")
+    setModalVisible(true);
+  };
+
+  const lose = () => {
+    document.removeEventListener("keydown", handleKeyDown);
+    winStatus="Lose"
     setTimerStatus("off")
     setModalVisible(true);
   };
@@ -148,6 +142,9 @@ function App() {
     setMarkers(updatedMarkers);
     console.log(markers);
     round.current = _round + 1;
+    if(round.current===6){
+      lose();
+    }
     letterIndex.current = 0;
   };
 
@@ -210,13 +207,6 @@ function App() {
     }
   };
 
-  const getDayOfYear = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
-  };
 
   const handleClick = (key) => {
     const pressedKey = key.toLowerCase();
@@ -392,7 +382,7 @@ function App() {
           contentLabel="Share"
         >
           <ShareModal>
-            <Heading>You win!</Heading>
+            <Heading>You {winStatus}!</Heading>
             <Row>
               <h3>Share</h3>
               <ShareButton onClick={copyMarkers} disabled={isShared}>
