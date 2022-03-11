@@ -73,6 +73,18 @@ export const Tile = styled.div`
     }
   }}
 
+  ${({ hint }) => {
+    if (hint === "green") {
+      return `border: 2px solid # #6aaa64;`;
+    }
+    if (hint === "yellow") {
+      return `border: 2px solid # #b59f3b;`;
+    }
+    if (hint === "grey") {
+      return `border: 2px solid # #828282;`;
+    }
+  }}
+
   user-select: none;
 `;
 
