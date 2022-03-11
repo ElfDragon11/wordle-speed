@@ -8,7 +8,7 @@ var hours=0;
 var minutes=0;
 var seconds=0;
 var milliseconds=0;
-var counter="";
+
 var timer;
 const LOCAL_STORAGE_KEY_TIMES="WordleSpeed.times";
 export default function Timer({status}) {
@@ -107,37 +107,10 @@ var updateTime = function() {
     }else{
         $("milliseconds").innerHTML=milliseconds;
     }
-    //timerSet();
+
     
     localStorage.setItem(LOCAL_STORAGE_KEY_TIMES,JSON.stringify({TimerHours:hours, TimerMinutes:minutes, TimerSeconds: seconds, TimerMilliseconds:milliseconds}))
 };
-
-var timerSet = function(){
-    counter="";
-    if(hours>0){
-        if(hours<10){
-            counter+="0"+hours+":";
-        }else{
-            counter+=hours+":";
-        }
-    }
-    if(minutes<10){
-        $("minutes").innerHTML="0"+minutes;
-    }else{
-        $("minutes").innerHTML=minutes;
-    } 
-    if(seconds<10){
-        $("seconds").innerHTML="0"+seconds;
-    }else{
-        $("seconds").innerHTML=seconds;
-    }
-    if(milliseconds<10){
-        $("milliseconds").innerHTML="0"+milliseconds;
-    }else{
-        $("milliseconds").innerHTML=milliseconds;
-    }
-    //$("minutes").innerHTML = counter;
-}
 
 
 var startClock = function(){
