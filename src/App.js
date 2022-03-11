@@ -19,11 +19,15 @@ import { BackspaceIcon } from "./icons";
 import "./App.css";
 import { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
+import { listWords, validWords } from './listWords';
 
 var started=false;
-const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
-const LOCAL_STORAGE_KEY_ANSWERED_WORDS_MARKERS="wordlespeed.answers.markers";
 
+const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
+
+
+const dayLength = 86400000;
+const startTime = 1646895600000-(dayLength*3);
 
 const API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en";
 
@@ -63,9 +67,9 @@ function App() {
 
 
   const [TimerStatus, setTimerStatus] = useState('off')
-  //const [guessesMade, setGuessesMade] = useState({...newGame });
+ 
 
-  const wordOfTheDay = "money";
+  var wordOfTheDay = "money";
 
 
   const [guesses, setGuesses] = useState({ ...newGame });
@@ -115,6 +119,7 @@ function App() {
 
     if (updatedMarkers[_round].every((guess) => guess === "green")) {
       setMarkers(updatedMarkers);
+      localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
       win();
       return;
     }
@@ -124,7 +129,7 @@ function App() {
       leftoverIndices.forEach((index) => {
         const guessedLetter = guesses[_round][index];
         const correctPositionOfLetter = tempWord.indexOf(guessedLetter);
-
+        console.log(guessedLetter);
         if (
           tempWord.includes(guessedLetter) &&
           correctPositionOfLetter !== index
@@ -141,7 +146,6 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
     
     setMarkers(updatedMarkers);
-    //localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS_MARKERS,JSON.stringify(markers))
     console.log(markers);
     round.current = _round + 1;
     letterIndex.current = 0;
@@ -155,6 +159,7 @@ function App() {
       setGuesses((prev) => {
         const newGuesses = { ...prev };
         newGuesses[_round][_letterIndex - 1] = "";
+        
         return newGuesses;
       });
 
@@ -167,16 +172,17 @@ function App() {
       started=true;
       setTimerStatus("running")
     }
-    //console.log(pressedKey);
+    
     const _letterIndex = letterIndex.current;
     const _round = round.current;
-
-    //console.log(_letterIndex);
+    console.log(pressedKey);
+    console.log(_letterIndex);
 
     if (_letterIndex < wordLength) {
       setGuesses((prev) => {
         const newGuesses = { ...prev };
         newGuesses[_round][_letterIndex] = pressedKey.toLowerCase();
+        console.log(newGuesses);
         return newGuesses;
       });
 
@@ -185,18 +191,18 @@ function App() {
   };
 
   const enterGuess = async (pressedKey) => {
-    console.log(pressedKey);
-    console.log(letterIndex.current)
-    console.log(guesses[round.current]);
-    if (pressedKey === "enter" && /*!guesses[round.current].includes("")*/letterIndex.current===5) {
-      console.log("enter Pressed");
-      //change this to check against a valid word array
-      submit();
-     // const validWord = await fetchWord(guesses[round.current].join(""));
 
-     // if (Array.isArray(validWord)) {
+    console.log(guesses[round.current]);
+    if (pressedKey === "enter" && letterIndex.current===5) {
+      console.log("enter Pressed");
+
+      if(validWords.includes(guesses[round.current].join(""))){
+        submit();
+      }else if(listWords.includes(guesses[round.current].join(""))){
+        submit();
         
-      //}
+      }
+ 
     } else if (pressedKey === "backspace") {
       erase();
     } else if (pressedKey !== "enter") {
@@ -261,51 +267,58 @@ function App() {
 
 
   useEffect(() => {
+   
+    let d = new Date();
+    let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
+    wordOfTheDay = listWords[answerIndex];
 
-   // const stupid = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS));    
+
     const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS))
-    //setGuessesMade(stupid);
-    
     
     var guessesMadeArray;
 
-   // console.log(stupid);
-
-    console.log("Cookie");
-
-    console.log(guessesMade);
-    console.log("guesses");
-    console.log(guesses);
     
     if(guessesMade!=null){
    
-     // let end = false;
       guessesMadeArray = Object.values(guessesMade);
-      guessesMadeArray.forEach((item) => {
-          /*item.forEach((letter)=>{
-            if(letter!==''){
-            handleClick(letter);
-            }else{
-              end = true;
-            }
-          });
-          if(end=== false){
-            handleClick("enter");
-          }*/
+      guessesMadeArray.forEach((Word) => {
 
-          var l0 = (item[0]);
-          var l1 = (item[1]);
-          var l2 = (item[2]);
-          var l3 = (item[3]);
-          var l4 = (item[4]);
-          //console.log(typeof(l4));
+          var l0 = (Word[0]);
+          var l1 = (Word[1]);
+          var l2 = (Word[2]);
+          var l3 = (Word[3]);
+          var l4 = (Word[4]);
+
           if(l0!=='' && l1!=='' && l2!=='' && l3!=='' && l4!==''){
+            
+            setTimeout(function() {
+              handleClick(l0);
+            }, 1);
+            setTimeout(function() {
+              handleClick(l1);
+            }, 1);
+            setTimeout(function() {
+              handleClick(l2);
+            }, 1);
+            setTimeout(function() {
+              handleClick(l3);
+            }, 1);
+            setTimeout(function() {
+              handleClick(l4);
+            }, 1);
+            setTimeout(function() {
+              handleClick("enter");
+            }, 1);
+        
+          /*
             handleClick(l0);
             handleClick(l1);
             handleClick(l2);
             handleClick(l3);
             handleClick(l4);
-            submit();
+            handleClick("enter");
+          */
+          
           }
           
           console.log("here");

@@ -22,7 +22,7 @@ export default function Timer({status}) {
       useEffect(() => {
         if(hours===0 && minutes===0 && seconds===0 && milliseconds===0){
             const storedTimes= JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_TIMES))
-            console.log(storedTimes)
+            
             if(storedTimes){
                 hours = storedTimes.TimerHours;
                 minutes = storedTimes.TimerMinutes;
