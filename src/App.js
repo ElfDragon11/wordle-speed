@@ -62,8 +62,11 @@ function App() {
   
 
 
-  var [TimerStatus, setTimerStatus] = useState('off')
+  const [TimerStatus, setTimerStatus] = useState('off')
+  const [guessesMade, setGuessesMade] = useState({...newGame });
+
   const wordOfTheDay = "money";
+
 
   const [guesses, setGuesses] = useState({ ...newGame });
   const [markers, setMarkers] = useState({
@@ -138,7 +141,7 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
     
     setMarkers(updatedMarkers);
-    localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS_MARKERS,JSON.stringify(markers))
+    //localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS_MARKERS,JSON.stringify(markers))
     console.log(markers);
     round.current = _round + 1;
     letterIndex.current = 0;
@@ -183,8 +186,8 @@ function App() {
 
   const enterGuess = async (pressedKey) => {
     console.log(pressedKey);
-    console.log(round.current);
-    console.log(guesses);
+    
+    console.log(!guesses[round.current].includes(""));
     if (pressedKey === "enter" && !guesses[round.current].includes("")) {
       console.log("enter Pressed");
       //change this to check against a valid word array
@@ -254,19 +257,21 @@ function App() {
   };
 
 
+
+
   useEffect(() => {
 
-    const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS));
-
+    
+    setGuesses(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS)));
     var guessesMadeArray;
     console.log(guessesMade);
     console.log(guesses);
     if(guessesMade!=null){
-      round.current=0;
+   
       let end = false;
       guessesMadeArray = Object.values(guessesMade);
       guessesMadeArray.forEach((item) => {
-          item.forEach((letter)=>{
+          /*item.forEach((letter)=>{
             if(letter!==''){
             handleClick(letter);
             }else{
@@ -275,8 +280,22 @@ function App() {
           });
           if(end=== false){
             handleClick("enter");
+          }*/
+
+          let l0 = item[0];
+          let l1 = item[1];
+          let l2 = item[2];
+          let l3 = item[3];
+          let l4 = item[4];
+          if(l0!=='' && l1!=='' && l2!=='' && l3!=='' && l4!==''){
+            handleClick(l0);
+            handleClick(l1);
+            handleClick(l2);
+            handleClick(l3);
+            handleClick(l4);
+            handleClick("enter");
           }
-         
+          
           console.log("here");
         
         
