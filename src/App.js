@@ -63,7 +63,7 @@ function App() {
 
 
   const [TimerStatus, setTimerStatus] = useState('off')
-  const [guessesMade, setGuessesMade] = useState({...newGame });
+  //const [guessesMade, setGuessesMade] = useState({...newGame });
 
   const wordOfTheDay = "money";
 
@@ -186,16 +186,17 @@ function App() {
 
   const enterGuess = async (pressedKey) => {
     console.log(pressedKey);
-    
-    console.log(!guesses[round.current].includes(""));
-    if (pressedKey === "enter" && !guesses[round.current].includes("")) {
+    console.log(letterIndex.current)
+    console.log(guesses[round.current]);
+    if (pressedKey === "enter" && /*!guesses[round.current].includes("")*/letterIndex.current===5) {
       console.log("enter Pressed");
       //change this to check against a valid word array
-      const validWord = await fetchWord(guesses[round.current].join(""));
+      submit();
+     // const validWord = await fetchWord(guesses[round.current].join(""));
 
-      if (Array.isArray(validWord)) {
-        submit();
-      }
+     // if (Array.isArray(validWord)) {
+        
+      //}
     } else if (pressedKey === "backspace") {
       erase();
     } else if (pressedKey !== "enter") {
@@ -261,14 +262,24 @@ function App() {
 
   useEffect(() => {
 
+   // const stupid = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS));    
+    const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS))
+    //setGuessesMade(stupid);
     
-    setGuesses(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS)));
+    
     var guessesMadeArray;
+
+   // console.log(stupid);
+
+    console.log("Cookie");
+
     console.log(guessesMade);
+    console.log("guesses");
     console.log(guesses);
+    
     if(guessesMade!=null){
    
-      let end = false;
+     // let end = false;
       guessesMadeArray = Object.values(guessesMade);
       guessesMadeArray.forEach((item) => {
           /*item.forEach((letter)=>{
@@ -282,18 +293,19 @@ function App() {
             handleClick("enter");
           }*/
 
-          let l0 = item[0];
-          let l1 = item[1];
-          let l2 = item[2];
-          let l3 = item[3];
-          let l4 = item[4];
+          var l0 = (item[0]);
+          var l1 = (item[1]);
+          var l2 = (item[2]);
+          var l3 = (item[3]);
+          var l4 = (item[4]);
+          //console.log(typeof(l4));
           if(l0!=='' && l1!=='' && l2!=='' && l3!=='' && l4!==''){
             handleClick(l0);
             handleClick(l1);
             handleClick(l2);
             handleClick(l3);
             handleClick(l4);
-            handleClick("enter");
+            submit();
           }
           
           console.log("here");
@@ -302,8 +314,8 @@ function App() {
         
        
         
-      });
-      
+        });
+   
     }
 
     Modal.setAppElement("#share");
@@ -321,14 +333,14 @@ function App() {
         <Timer status={TimerStatus}/>
         <GameSection>
           <TileContainer>
-            {Object.values(guesses).map((word, wordIndex) => (
+          {Object.values(guesses).map((word, wordIndex) => (
               <TileRow key={wordIndex}>
-                {word.map((letter, i) => (
-                  <Tile key={i} hint={markers[wordIndex][i]}>
-                    {letter}
-                  </Tile>
-                ))}
-              </TileRow>
+              {word.map((letter, i) => (
+                <Tile key={i} hint={markers[wordIndex][i]}>
+                  {letter}
+                </Tile>
+              ))}
+            </TileRow>
             ))}
           </TileContainer>
         </GameSection>
