@@ -61,18 +61,42 @@ export const Tile = styled.div`
   line-height: 3.2rem;
   text-transform: uppercase;
 
-  ${({ hint }) => {
-    if (hint === "green") {
-      return `background-color: #6aaa64;`;
+  ${({ hint , CB}) => {
+    if(CB){
+      if (hint === "green") {
+        return `background-color: #3c1cf3;`;
+      }
+      if (hint === "yellow") {
+        return `background-color: #f3961c;`;
+      }
+      if (hint === "grey") {
+        return `background-color: #828282;`;
+      }
+    }else{
+      if (hint === "green") {
+        return `background-color: #6aaa64;`;
+      }
+      if (hint === "yellow") {
+        return `background-color: #b59f3b;`;
+      }
+      if (hint === "grey") {
+        return `background-color: #828282;`;
+      }
     }
-    if (hint === "yellow") {
-      return `background-color: #b59f3b;`;
-    }
-    if (hint === "grey") {
-      return `background-color: #828282;`;
-    }
+
   }}
-  ${({ hint }) => {
+  ${({ hint , CB}) => {
+    if(CB){
+      if (hint === "green") {
+        return `border: 2px solid #3c1cf3;`;
+      }
+      if (hint === "yellow") {
+        return `border: 2px solid #f3961c;`;
+      }
+      if (hint === "grey") {
+        return `border: 2px solid #828282;`;
+      }
+  }else{
     if (hint === "green") {
       return `border: 2px solid #6aaa64;`;
     }
@@ -82,6 +106,7 @@ export const Tile = styled.div`
     if (hint === "grey") {
       return `border: 2px solid #828282;`;
     }
+  }
   }}
 
   user-select: none;

@@ -24,6 +24,7 @@ import { listWords, validWords } from './listWords';
 var started=false;
 var winStatus = "Win";
 const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
+var colorBlindMode = false;
 
 
 const dayLength = 86400000;
@@ -252,22 +253,21 @@ function App() {
       enterGuess(pressedKey);
     }
   };
-
-
-
+  const colorBlindToggle = function(){
+    colorBlindMode= !colorBlindMode;
+    console.log(colorBlindMode);
+  }
+  const colorBlindModeToggle = () =>{
+      colorBlindMode= !colorBlindMode;
+  }
 
   useEffect(() => {
    
     let d = new Date();
     let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
     wordOfTheDay = listWords[answerIndex];
-
-
     const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS))
-    
     var guessesMadeArray;
-
-    
     if(guessesMade!=null){
    
       guessesMadeArray = Object.values(guessesMade);
@@ -308,15 +308,7 @@ function App() {
             handleClick(l4);
             handleClick("enter");
           */
-          
           }
-          
-          console.log("here");
-        
-        
-        
-       
-        
         });
    
     }
@@ -328,18 +320,27 @@ function App() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
   
+  /*onClick={colorBlindMode= !colorBlindMode}
+  onClick={setModalVisible(true)}
+  */ 
 
   return (
     <>
       <Main>
+        
         <Header>WORDLE SPEED</Header>
+        
+        <div id="topBar">
+          <p >Leaderboard</p>
+          <input type="button" value="Colorblind Mode" onClick={colorBlindToggle()} />
+        </div>
         <Timer status={TimerStatus}/>
         <GameSection>
           <TileContainer>
           {Object.values(guesses).map((word, wordIndex) => (
               <TileRow key={wordIndex}>
               {word.map((letter, i) => (
-                <Tile key={i} hint={markers[wordIndex][i]}>
+                <Tile key={i} hint={markers[wordIndex][i]} CB={colorBlindMode}>
                   {letter}
                 </Tile>
               ))}
