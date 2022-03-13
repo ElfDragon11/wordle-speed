@@ -123,7 +123,7 @@ var startClock = function(){
 
 var stopClock = function(){
     clearInterval(timer);
-    this.props.timerStop(minutes+":"+seconds+"."+milliseconds);
+    //this.props.timerStop(minutes+":"+seconds+"."+milliseconds);
     
 }
 
