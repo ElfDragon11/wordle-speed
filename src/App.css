@@ -62,7 +62,7 @@ button {
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
-	/*background-color: #3c1cf3;*/
+	/*	background-color: #bebebe;*/
 }
 
 h1 {
@@ -85,4 +85,24 @@ h4 {
 }
 #topBar p{
 	font-size: medium;
+}
+.topBarItem{
+	width: 33%;
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+}
+
+#RulesLinkContainter{
+	display: flex;
+	align-self: center;
+}
+#LeaderboardLinkContainter{
+	display: flex;
+	align-self: center;
+}
+
+#CBContainer{
+	display: flex;
+	align-self: center;
 }

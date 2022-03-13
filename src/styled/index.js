@@ -64,10 +64,10 @@ export const Tile = styled.div`
   ${({ hint , CB}) => {
     if(CB){
       if (hint === "green") {
-        return `background-color: #3c1cf3;`;
+        return `background-color: #e0a45f;`;
       }
       if (hint === "yellow") {
-        return `background-color: #f3961c;`;
+        return `background-color: #37ace2;`;
       }
       if (hint === "grey") {
         return `background-color: #828282;`;
@@ -88,10 +88,10 @@ export const Tile = styled.div`
   ${({ hint , CB}) => {
     if(CB){
       if (hint === "green") {
-        return `border: 2px solid #3c1cf3;`;
+        return `border: 2px solid #e0a45f;`;
       }
       if (hint === "yellow") {
-        return `border: 2px solid #f3961c;`;
+        return `border: 2px solid #37ace2;`;
       }
       if (hint === "grey") {
         return `border: 2px solid #828282;`;
@@ -139,10 +139,10 @@ export const KeyboardButton = styled.button`
 
   border: 0;
   border-radius: 4px;
-  background-color: #818384;
+  background-color: #bebebe;
   font-weight: bold;
   text-transform: uppercase;
-  color: #d7dadc;
+  color: black;
 
   cursor: pointer;
   user-select: none;
@@ -150,6 +150,35 @@ export const KeyboardButton = styled.button`
   &:last-of-type {
     margin: 0;
   }
+
+  ${({hint , CB}) => {
+    if(CB){
+      if (hint === "green") {
+        return `background-color: #e0a45f; color: black;`;
+        
+      }
+      if (hint === "yellow") {
+        return `background-color: #37ace2; color: black;`;
+      }
+      if (hint === "grey") {
+         return `background-color: #828282; color: white;`;
+      }
+    }else{
+      if (hint === "green") {
+        return `background-color: #6aaa64; color: black;`;
+      }
+      if (hint === "yellow") {
+        return `background-color: #b59f3b; color: black;`;
+
+      }
+      if (hint === "grey") {
+        return `background-color: #828282; color: white;`;
+
+      }
+    }
+
+  }}
+
 `;
 
 export const Flex = styled.div`
@@ -177,8 +206,9 @@ export const Heading = styled.h2`
   border-bottom: 1px solid #3a3a3c;
   padding-bottom: 8px;
 
+  text-align: center;
   font-weight: 700;
-  font-size: 3.6rem;
+  font-size: 3rem;
   letter-spacing: 0.2rem;
   text-transform: uppercase;
 `;
@@ -187,6 +217,6 @@ export const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  font-size: 20px;
   margin: 16px auto;
 `;

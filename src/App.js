@@ -24,7 +24,9 @@ import { listWords, validWords } from './listWords';
 var started=false;
 var winStatus = "Win";
 const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
-var colorBlindMode = false;
+const LOCAL_STORAGE_KEY_CBTOGGLE="wordlespeed.cbtoggle";
+
+var CBButtonValue = "Enable ColorBlind";
 
 
 const dayLength = 86400000;
@@ -52,11 +54,14 @@ const newGame = {
 
 
 
+
 function App() {
+
+  //const [Keyhint, setKeyHint]
 
   const [TimerStatus, setTimerStatus] = useState('off')
  
-
+  const [colorBlindMode, setcolorBlindMode]  = useState(false);
   var wordOfTheDay = "money";
 
 
@@ -70,10 +75,34 @@ function App() {
     5: Array.from({ length: wordLength }).fill(""),
   });
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isRulesModalVisible, setRulesModalVisible] = useState(false);
   const [isShared, setIsShared] = useState(false);
 
   let letterIndex = useRef(0);
   let round = useRef(0);
+
+  const colorBlindToggle = () =>{
+    setcolorBlindMode(!colorBlindMode);
+
+    document.getElementById("CBtoggle").blur();
+    
+    if(colorBlindMode){
+      CBButtonValue="Enable ColorBlind";
+    }else{
+      CBButtonValue="Disable ColorBlind";
+      
+    }
+
+    localStorage.setItem(LOCAL_STORAGE_KEY_CBTOGGLE, colorBlindMode);
+  }
+
+  const openRules =()=>{
+    setRulesModalVisible(true);
+  }
+
+  const openLeaderBoard =()=>{
+    setRulesModalVisible(true);
+  }
 
   const win = () => {
     document.removeEventListener("keydown", handleKeyDown);
@@ -124,7 +153,7 @@ function App() {
       leftoverIndices.forEach((index) => {
         const guessedLetter = guesses[_round][index];
         const correctPositionOfLetter = tempWord.indexOf(guessedLetter);
-        console.log(guessedLetter);
+        
         if (
           tempWord.includes(guessedLetter) &&
           correctPositionOfLetter !== index
@@ -132,6 +161,7 @@ function App() {
           // Mark yellow when letter is in the word of the day but in the wrong spot
           updatedMarkers[_round][index] = "yellow";
           tempWord[correctPositionOfLetter] = "";
+        
         } else {
           // This means the letter is not in the word of the day.
           updatedMarkers[_round][index] = "grey";
@@ -141,7 +171,6 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
     
     setMarkers(updatedMarkers);
-    console.log(markers);
     round.current = _round + 1;
     if(round.current===6){
       lose();
@@ -173,14 +202,12 @@ function App() {
     
     const _letterIndex = letterIndex.current;
     const _round = round.current;
-    console.log(pressedKey);
-    console.log(_letterIndex);
+
 
     if (_letterIndex < wordLength) {
       setGuesses((prev) => {
         const newGuesses = { ...prev };
         newGuesses[_round][_letterIndex] = pressedKey.toLowerCase();
-        console.log(newGuesses);
         return newGuesses;
       });
 
@@ -190,10 +217,8 @@ function App() {
 
   const enterGuess = async (pressedKey) => {
 
-    console.log(guesses[round.current]);
     if (pressedKey === "enter" && letterIndex.current===5) {
-      console.log("enter Pressed");
-
+     
       if(validWords.includes(guesses[round.current].join(""))){
         submit();
       }else if(listWords.includes(guesses[round.current].join(""))){
@@ -253,16 +278,16 @@ function App() {
       enterGuess(pressedKey);
     }
   };
-  const colorBlindToggle = function(){
-    colorBlindMode= !colorBlindMode;
-    console.log(colorBlindMode);
-  }
-  const colorBlindModeToggle = () =>{
-      colorBlindMode= !colorBlindMode;
-  }
+
 
   useEffect(() => {
-   
+    
+    const CBcookie = localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE);
+    if(CBcookie){
+      colorBlindToggle();
+
+    }
+
     let d = new Date();
     let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
     wordOfTheDay = listWords[answerIndex];
@@ -312,7 +337,10 @@ function App() {
         });
    
     }
-
+    
+  //  console.log(keyboardButtonRef.current);
+  //  console.log(keyboardButtonRef.current.value);
+    //keyboardButtonRef.current.value="here";
     Modal.setAppElement("#share");
 
     document.addEventListener("keydown", handleKeyDown);
@@ -320,19 +348,41 @@ function App() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
   
-  /*onClick={colorBlindMode= !colorBlindMode}
-  onClick={setModalVisible(true)}
-  */ 
+
+  /*useEffect(() => {
+    console.log(keyboardButtonRef.current.value);
+  },[keyboardButtonRef]);*/
+  
+  function KeyboardKeyColor(key) {
+    var i = round.current;
+    Object.values(guesses).forEach(array => {
+      if(array.indexOf(key)>=0){
+        console.log(key+" "+markers[i][array.indexOf(key)]);
+        console.log(i);
+      
+        return markers[i][array.indexOf(key)];
+      }else{
+
+        console.log("");
+      }
+      
+    })
+    
+  }
 
   return (
     <>
-      <Main>
+      <Main rerender={colorBlindMode}>
         
         <Header>WORDLE SPEED</Header>
         
         <div id="topBar">
-          <p >Leaderboard</p>
-          <input type="button" value="Colorblind Mode" onClick={colorBlindToggle()} />
+          <article id="RulesLinkContainter" className="topBarItem"><p id="LinkContainter" onClick={()=> openRules()}>Rules</p></article>
+          <article id="LeaderboardLinkContainter" className="topBarItem"><p onClick={()=> openLeaderBoard()}>Leaderboard</p></article>
+          <article id="CBContainer" className="topBarItem"><input id="CBtoggle"type="button" value={CBButtonValue} onClick={()=>colorBlindToggle()} /></article>
+         
+          
+          
         </div>
         <Timer status={TimerStatus}/>
         <GameSection>
@@ -348,12 +398,14 @@ function App() {
             ))}
           </TileContainer>
         </GameSection>
-        <KeyboardSection>
+        <KeyboardSection >
           {keyboardRows.map((keys, i) => (
             <KeyboardRow key={i}>
               {i === 1 && <Flex item={0.5} />}
               {keys.map((key) => (
                 <KeyboardButton
+                  hint={KeyboardKeyColor(key)} 
+                  CB={colorBlindMode}
                   key={key}
                   onClick={() => handleClick(key)}
                   flex={["enter", "backspace"].includes(key) ? 1.5 : 1}
@@ -389,6 +441,31 @@ function App() {
               <ShareButton onClick={copyMarkers} disabled={isShared}>
                 {isShared ? "Copied!" : "Share"}
               </ShareButton>
+            </Row>
+          </ShareModal>
+        </Modal>
+      </div>
+
+      <div id="rules">
+        <Modal
+          isOpen={isRulesModalVisible}
+          onRequestClose={() => setRulesModalVisible(false)}
+          style={{
+            content: {
+              top: "50%",
+              left: "50%",
+              right: "auto",
+              bottom: "auto",
+              marginRight: "-50%",
+              transform: "translate(-50%, -50%)",
+            },
+          }}
+          contentLabel="Share"
+        >
+          <ShareModal>
+            <Heading>Rules</Heading>
+            <Row>
+             <p>Same rules as Wordle, but get the fastest time <br /> you can. Hope you know what your doing.</p>
             </Row>
           </ShareModal>
         </Modal>
