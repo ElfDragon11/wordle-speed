@@ -20,6 +20,7 @@ export default function Timer({status}) {
        }
       }, [status]);
       useEffect(() => {
+          
         if(hours===0 && minutes===0 && seconds===0 && milliseconds===0){
             const storedTimes= JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_TIMES))
             
@@ -122,6 +123,7 @@ var startClock = function(){
 
 var stopClock = function(){
     clearInterval(timer);
+    this.props.timerStop(minutes+":"+seconds+"."+milliseconds);
     
 }
 

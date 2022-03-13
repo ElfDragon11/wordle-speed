@@ -57,9 +57,11 @@ const newGame = {
 
 function App() {
 
-  //const [Keyhint, setKeyHint]
+  let d = new Date();
+  let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
 
   const [TimerStatus, setTimerStatus] = useState('off')
+ // const [TimerTime, setTimerTime] = useState('00:00.00')
  
   const [colorBlindMode, setcolorBlindMode]  = useState(false);
   var wordOfTheDay = "money";
@@ -76,11 +78,19 @@ function App() {
   });
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRulesModalVisible, setRulesModalVisible] = useState(false);
+  const [isLeaderBoardModalVisible, setLeaderBoardModalVisible] = useState(false);
   const [isShared, setIsShared] = useState(false);
 
   let letterIndex = useRef(0);
   let round = useRef(0);
 
+  let keyColors = useRef({key:[], color: []});
+
+/*
+  const timerStop = (timerValue) => {
+    setTimerTime(timerValue);
+  }
+*/
   const colorBlindToggle = () =>{
     setcolorBlindMode(!colorBlindMode);
 
@@ -242,7 +252,7 @@ function App() {
 
   const copyMarkers = () => {
     //let shareText = `Wordle ${getDayOfYear()}`;   change this
-    let shareText = `Wordle `
+    let shareText = `Speedle ${answerIndex} /n Time: `
     let shareGuesses = "";
 
     const amountOfGuesses = Object.entries(markers)
@@ -282,14 +292,14 @@ function App() {
 
   useEffect(() => {
     
+
     const CBcookie = localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE);
     if(CBcookie){
       colorBlindToggle();
 
     }
 
-    let d = new Date();
-    let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
+   
     wordOfTheDay = listWords[answerIndex];
     const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS))
     var guessesMadeArray;
@@ -355,19 +365,23 @@ function App() {
   
   function KeyboardKeyColor(key) {
     var i = round.current;
-    Object.values(guesses).forEach(array => {
-      if(array.indexOf(key)>=0){
-        console.log(key+" "+markers[i][array.indexOf(key)]);
-        console.log(i);
-      
-        return markers[i][array.indexOf(key)];
-      }else{
-
-        console.log("");
-      }
-      
-    })
     
+      if(Object.values(guesses)[i].indexOf(key)>=0){
+        let keyMarkerIndex = Object.values(guesses)[i].indexOf(key);
+        if(markers[i][keyMarkerIndex]==="green"||markers[i][keyMarkerIndex]==="yellow"||markers[i][keyMarkerIndex]==="grey"){
+          if(keyColors.current.key.includes(key)){
+            if(keyColors.current.color[keyColors.current.key.indexOf(key)] !=="green"){
+              keyColors.current.color[keyColors.current.key.indexOf(key)] = markers[i][keyMarkerIndex];
+            }
+          }else{
+            keyColors.current.color = [...keyColors.current.color, markers[i][keyMarkerIndex]];
+            keyColors.current.key = [...keyColors.current.key, key];  
+          }
+        }
+      }   
+      if(keyColors.current.key.includes(key)){
+        return keyColors.current.color[keyColors.current.key.indexOf(key)];    
+      }
   }
 
   return (
@@ -384,7 +398,7 @@ function App() {
           
           
         </div>
-        <Timer status={TimerStatus}/>
+        <Timer status={TimerStatus} /*StoppedTime={timerStop()}*/ />
         <GameSection>
           <TileContainer>
           {Object.values(guesses).map((word, wordIndex) => (
@@ -437,7 +451,7 @@ function App() {
           <ShareModal>
             <Heading>You {winStatus}!</Heading>
             <Row>
-              <h3>Share</h3>
+              <h3>Share Speedle</h3>
               <ShareButton onClick={copyMarkers} disabled={isShared}>
                 {isShared ? "Copied!" : "Share"}
               </ShareButton>
@@ -450,6 +464,31 @@ function App() {
         <Modal
           isOpen={isRulesModalVisible}
           onRequestClose={() => setRulesModalVisible(false)}
+          style={{
+            content: {
+              top: "50%",
+              left: "50%",
+              right: "auto",
+              bottom: "auto",
+              marginRight: "-50%",
+              transform: "translate(-50%, -50%)",
+            },
+          }}
+          contentLabel="Share"
+        >
+          <ShareModal>
+            <Heading>Leaderboard</Heading>
+            <Row>
+             <p>In Progress</p>
+            </Row>
+          </ShareModal>
+        </Modal>
+      </div>
+
+      <div id="leaderboard">
+        <Modal
+          isOpen={isLeaderBoardModalVisible}
+          onRequestClose={() => setLeaderBoardModalVisible(false)}
           style={{
             content: {
               top: "50%",

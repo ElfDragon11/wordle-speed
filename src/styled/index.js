@@ -77,7 +77,7 @@ export const Tile = styled.div`
         return `background-color: #6aaa64;`;
       }
       if (hint === "yellow") {
-        return `background-color: #b59f3b;`;
+        return `background-color: #e6c94c;`;
       }
       if (hint === "grey") {
         return `background-color: #828282;`;
@@ -101,7 +101,7 @@ export const Tile = styled.div`
       return `border: 2px solid #6aaa64;`;
     }
     if (hint === "yellow") {
-      return `border: 2px solid #b59f3b;`;
+      return `border: 2px solid #e6c94c;`;
     }
     if (hint === "grey") {
       return `border: 2px solid #828282;`;
@@ -168,7 +168,7 @@ export const KeyboardButton = styled.button`
         return `background-color: #6aaa64; color: black;`;
       }
       if (hint === "yellow") {
-        return `background-color: #b59f3b; color: black;`;
+        return `background-color: #e6c94c; color: black;`;
 
       }
       if (hint === "grey") {
