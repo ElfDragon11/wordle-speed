@@ -10,6 +10,8 @@ var seconds=0;
 var milliseconds=0;
 
 var timer;
+
+let d = new Date();
 const LOCAL_STORAGE_KEY_TIMES="WordleSpeed.times";
 export default function Timer({status}) {
     useEffect(() => {
@@ -22,13 +24,23 @@ export default function Timer({status}) {
       useEffect(() => {
           
         if(hours===0 && minutes===0 && seconds===0 && milliseconds===0){
-            const storedTimes= JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_TIMES))
+            const CookieObj = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_TIMES))
             
-            if(storedTimes){
-                hours = storedTimes.TimerHours;
-                minutes = storedTimes.TimerMinutes;
-                seconds = storedTimes.TimerSeconds;
-                milliseconds = storedTimes.TimerMilliseconds;
+            
+            if(CookieObj){
+                const storedTimes = CookieObj.StoredObj
+                if(CookieObj.timeSet!== (d.getMonth()+"."+d.getDate())){
+                    hours = 0;
+                    minutes = 0;
+                    seconds = 0;
+                    milliseconds = 0;
+                }else{
+                    hours = storedTimes.TimerHours;
+                    minutes = storedTimes.TimerMinutes;
+                    seconds = storedTimes.TimerSeconds;
+                    milliseconds = storedTimes.TimerMilliseconds;
+                }
+
                 if(minutes<10){
                    $("minutes").innerHTML="0"+minutes;
                 }else{
@@ -104,7 +116,7 @@ var updateTime = function() {
     }
 
     
-    localStorage.setItem(LOCAL_STORAGE_KEY_TIMES,JSON.stringify({TimerHours:hours, TimerMinutes:minutes, TimerSeconds: seconds, TimerMilliseconds:milliseconds}))
+    localStorage.setItem(LOCAL_STORAGE_KEY_TIMES,JSON.stringify({StoredObj:{TimerHours:hours, TimerMinutes:minutes, TimerSeconds: seconds, TimerMilliseconds:milliseconds}, timeSet: (d.getMonth()+"."+d.getDate())}))
 };
 
 

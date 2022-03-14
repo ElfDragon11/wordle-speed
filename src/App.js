@@ -59,7 +59,7 @@ function App() {
   let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
 
   const [TimerStatus, setTimerStatus] = useState('off')
- // const [TimerTime, setTimerTime] = useState('00:00.00')
+
  
   const [colorBlindMode, setcolorBlindMode]  = useState(false);
 
@@ -154,7 +154,7 @@ function App() {
 
     if (updatedMarkers[_round].every((guess) => guess === "green")) {
       setMarkers(updatedMarkers);
-      localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
+      localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify({guessObj: guesses, timeSet: d.getMonth()+"."+d.getDate()}))
       win();
       return;
     }
@@ -179,7 +179,7 @@ function App() {
         }
       });
     }
-    localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify(guesses))
+    localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify({guessObj: guesses, timeSet: d.getMonth()+"."+d.getDate()}))
     
     setMarkers(updatedMarkers);
     round.current = _round + 1;
@@ -292,6 +292,10 @@ function App() {
 
 
   useEffect(() => {
+
+    
+    console.log(d.getMonth()+"."+d.getDate());
+
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
     if(CBcookie!== null){
@@ -302,11 +306,22 @@ function App() {
 
    
     wordOfTheDay = listWords[answerIndex];
-    const guessesMade = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS))
-    var guessesMadeArray;
-    if(guessesMade!=null){
-   
-      guessesMadeArray = Object.values(guessesMade);
+    const storedAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS));
+    
+    if(storedAnswers!=null){
+
+      if(storedAnswers.timeSet!== (d.getMonth()+"."+d.getDate())){
+        localStorage.removeItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS);
+
+        Modal.setAppElement("#share");
+
+        document.addEventListener("keydown", handleKeyDown);
+     
+        return () => document.removeEventListener("keydown", handleKeyDown);
+      }
+
+      const guessesMade = storedAnswers.guessObj;
+      var guessesMadeArray = Object.values(guessesMade);
       guessesMadeArray.forEach((Word) => {
 
           var l0 = (Word[0]);
