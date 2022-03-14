@@ -62,6 +62,7 @@ function App() {
  // const [TimerTime, setTimerTime] = useState('00:00.00')
  
   const [colorBlindMode, setcolorBlindMode]  = useState(false);
+
   var wordOfTheDay = "money";
 
 
@@ -91,17 +92,19 @@ function App() {
 */
   const colorBlindToggle = () =>{
     setcolorBlindMode(!colorBlindMode);
-
+    console.log(colorBlindMode);
     document.getElementById("CBtoggle").blur();
     
     if(colorBlindMode){
       CBButtonValue="Enable ColorBlind";
+      
     }else{
+      
       CBButtonValue="Disable ColorBlind";
       
     }
-
-    localStorage.setItem(LOCAL_STORAGE_KEY_CBTOGGLE, colorBlindMode);
+    
+    localStorage.setItem(LOCAL_STORAGE_KEY_CBTOGGLE, JSON.stringify(colorBlindMode));
   }
 
   const openRules =()=>{
@@ -109,7 +112,7 @@ function App() {
   }
 
   const openLeaderBoard =()=>{
-    setRulesModalVisible(true);
+    setLeaderBoardModalVisible(true);
   }
 
   const win = () => {
@@ -290,11 +293,11 @@ function App() {
 
   useEffect(() => {
     
-
-    const CBcookie = localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE);
-    if(CBcookie){
-      colorBlindToggle();
-
+    const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
+    if(CBcookie!== null){
+      if(CBcookie===false){
+        colorBlindToggle();
+      }
     }
 
    
@@ -346,9 +349,8 @@ function App() {
    
     }
     
-  //  console.log(keyboardButtonRef.current);
-  //  console.log(keyboardButtonRef.current.value);
-    //keyboardButtonRef.current.value="here";
+
+
     Modal.setAppElement("#share");
 
     document.addEventListener("keydown", handleKeyDown);
@@ -357,9 +359,6 @@ function App() {
   }, []);
   
 
-  /*useEffect(() => {
-    console.log(keyboardButtonRef.current.value);
-  },[keyboardButtonRef]);*/
   
   function KeyboardKeyColor(key) {
     var i = round.current;
@@ -475,10 +474,10 @@ function App() {
           contentLabel="Share"
         >
           <ShareModal>
-            <Heading>Leaderboard</Heading>
-            <Row>
-             <p>In Progress</p>
-            </Row>
+            <Heading>Rules</Heading>
+             <Row>
+               <p>Same rules as Wordle, but get the fastest time <br /> you can. Hope you know what your doing.</p>
+             </Row>
           </ShareModal>
         </Modal>
       </div>
@@ -500,9 +499,9 @@ function App() {
           contentLabel="Share"
         >
           <ShareModal>
-            <Heading>Rules</Heading>
+            <Heading>Leaderboard</Heading>
             <Row>
-             <p>Same rules as Wordle, but get the fastest time <br /> you can. Hope you know what your doing.</p>
+             <p>In Progress</p>
             </Row>
           </ShareModal>
         </Modal>
