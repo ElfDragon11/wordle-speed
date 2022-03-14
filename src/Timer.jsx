@@ -64,12 +64,6 @@ export default function Timer({status}) {
 }
 
 
-
-
-
-
-
-
 var updateTime = function() {
     if(milliseconds===99){
         if(seconds===59){

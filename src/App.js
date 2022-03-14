@@ -53,8 +53,6 @@ const newGame = {
 };
 
 
-
-
 function App() {
 
   let d = new Date();
