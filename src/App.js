@@ -30,7 +30,7 @@ var CBButtonValue = "Enable ColorBlind";
 
 
 const dayLength = 86400000;
-const startTime = 1646895600000-(dayLength*4);
+const startTime = 1646895600000-(dayLength*5);
 
 
 const keyboardRows = [

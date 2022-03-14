@@ -155,7 +155,6 @@ export const KeyboardButton = styled.button`
     if(CB){
       if (hint === "green") {
         return `background-color: #e0a45f; color: black;`;
-        
       }
       if (hint === "yellow") {
         return `background-color: #37ace2; color: black;`;
