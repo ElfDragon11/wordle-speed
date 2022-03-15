@@ -13,6 +13,8 @@ import {
   Heading,
   Row,
   ShareButton,
+  LeaderBoardModal,
+  LeaderBoardRow,
 } from "./styled";
 import Timer from './Timer';
 import { BackspaceIcon } from "./icons";
@@ -31,7 +33,9 @@ var CBButtonValue = "Enable ColorBlind";
 
 const dayLength = 86400000;
 const startTime = 1646895600000-(dayLength*5);
-
+var Records=[];
+var LeaderboadItems=[];
+var LeaderboadText="";
 
 const keyboardRows = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -42,6 +46,7 @@ const keyboardRows = [
 const allKeys = keyboardRows.flat();
 
 const wordLength = 5;
+
 
 const newGame = {
   0: Array.from({ length: wordLength }).fill(""),
@@ -58,16 +63,24 @@ var Airtable = require('airtable');
 var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
 
 const table = base('Leadboard');
-const minifiedRecords =[{}];
-const getRecords = async() =>{
+
+
+const getRecords = async(res) =>{
+    var minifiedRecords=[];
     base('Leadboard').select({ 
         sort:[{field: 'Time', direction :'asc'}]
     }).eachPage(function page(records, fetchNextPage) {
-        console.log(records);
-        records.forEach(
-          (record)=>  console.log(record.get('Name')+" "+record.get('Time'))
-          //minifiedRecords= [...minifiedRecords, record.fields ]
-          );
+        //console.log(records);
+        records.forEach((record)=>  {
+          
+         // console.log(record.get('Name')+" "+record.get('Time'));
+
+          minifiedRecords=[...minifiedRecords, record.fields];
+          console.log(minifiedRecords)
+          
+          });
+          Records = minifiedRecords;
+          return minifiedRecords;
     });
 }
 
@@ -96,6 +109,8 @@ function App() {
 
   var wordOfTheDay = "money";
 
+  
+
 
   const [guesses, setGuesses] = useState({ ...newGame });
   const [markers, setMarkers] = useState({
@@ -116,11 +131,6 @@ function App() {
 
   let keyColors = useRef({key:[], color: []});
 
-/*
-  const timerStop = (timerValue) => {
-    setTimerTime(timerValue);
-  }
-*/
   const colorBlindToggle = () =>{
     setcolorBlindMode(!colorBlindMode);
     console.log(colorBlindMode);
@@ -128,13 +138,9 @@ function App() {
     
     if(colorBlindMode){
       CBButtonValue="Enable ColorBlind";
-      
     }else{
-      
       CBButtonValue="Disable ColorBlind";
-      
     }
-    
     localStorage.setItem(LOCAL_STORAGE_KEY_CBTOGGLE, JSON.stringify(colorBlindMode));
   }
 
@@ -144,6 +150,9 @@ function App() {
 
   const openLeaderBoard =()=>{
     setLeaderBoardModalVisible(true);
+    for(var i = 0; i < Records.length; i++){
+      LeaderboadText+= (i+1)+" "+Records[i].Name +"    " + Records[i].Time + " \n";
+    }
   }
 
   const win = () => {
@@ -352,8 +361,9 @@ function App() {
 
   useEffect(() => {
 
-    getRecords();
-    //console.log(d.getMonth()+"."+d.getDate());
+
+
+    Records = getRecords();;
 
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
@@ -568,16 +578,21 @@ function App() {
               bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, -50%)",
+              height: "200px",
             },
           }}
           contentLabel="Share"
         >
-          <ShareModal>
+          <LeaderBoardModal>
             <Heading>Leaderboard</Heading>
-            <Row>
-             <p>In Progress</p>
-            </Row>
-          </ShareModal>
+            <LeaderBoardRow>
+          
+               <p id="leaders">{LeaderboadText}</p>
+                
+  
+             
+            </LeaderBoardRow>
+          </LeaderBoardModal>
         </Modal>
       </div>
     </>

@@ -55,6 +55,7 @@ table {
 	border-spacing: 0;
 }
 button {
+	flex-direction: column;
 	background: none;
 	color: inherit;
 	border: none;

@@ -220,3 +220,17 @@ export const Row = styled.div`
   font-size: 20px;
   margin: 16px auto;
 `;
+
+
+export const LeaderBoardModal = styled.div`
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+  height:100px;
+`;
+export const LeaderBoardRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  margin: 16px auto;
+`;
