@@ -12,7 +12,7 @@ var milliseconds=0;
 var timer;
 
 let d = new Date();
-const LOCAL_STORAGE_KEY_TIMES="WordleSpeed.times";
+const LOCAL_STORAGE_KEY_TIMES="wordlespeed.times";
 export default function Timer({status}) {
     useEffect(() => {
        if(status==="running"){

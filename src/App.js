@@ -253,7 +253,35 @@ function App() {
 
   const copyMarkers = () => {
     //let shareText = `Wordle ${getDayOfYear()}`;   change this
-    let shareText = `Speedle ${answerIndex} /n Time: `
+    var timeObj = JSON.parse(localStorage.getItem("wordlespeed.times")).StoredObj
+    console.log(timeObj);
+    var time;
+    if(timeObj.TimerHours>0){
+      if(timeObj.TimerHours<0){
+        time += "0"+timeObj.TimerHours+":";
+      }else{
+        time += timeObj.TimerHours+":";
+      }
+    }
+    if(timeObj.TimerMinutes<0){
+      time += "0"+timeObj.TimerMinutes+":";
+    }else{
+      time += timeObj.TimerMinutes+":";
+    }
+    if(timeObj.TimerSeconds<0){
+      time += "0"+timeObj.TimerSeconds+".";
+    }else{
+      time += timeObj.TimerSeconds+".";
+    }
+    if(timeObj.TimerMilliseconds<0){
+      time += "0"+timeObj.TimerMilliseconds;
+    }else{
+      time += timeObj.TimerMilliseconds;
+    }
+
+    
+    
+    let shareText = `Speedle ${answerIndex} /n Time: ${time} `
     let shareGuesses = "";
 
     const amountOfGuesses = Object.entries(markers)
@@ -410,7 +438,7 @@ function App() {
           
           
         </div>
-        <Timer status={TimerStatus} /*StoppedTime={timerStop()}*/ />
+        <Timer status={TimerStatus}  />
         <GameSection>
           <TileContainer>
           {Object.values(guesses).map((word, wordIndex) => (
