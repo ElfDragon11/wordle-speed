@@ -193,6 +193,7 @@ export const ShareButton = styled.button`
   padding: 8px 16px;
   border-radius: 4px;
   border: 2px solid #3a3a3c;
+  margin-left: 5px;
 
   transition: background-color 0.2s ease-in;
 

@@ -52,6 +52,37 @@ const newGame = {
   5: Array.from({ length: wordLength }).fill(""),
 };
 
+//################################## API STUFF ############################
+
+var Airtable = require('airtable');
+var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
+
+const table = base('Leadboard');
+const minifiedRecords =[{}];
+const getRecords = async() =>{
+    base('Leadboard').select({ 
+        sort:[{field: 'Time', direction :'asc'}]
+    }).eachPage(function page(records, fetchNextPage) {
+        console.log(records);
+        records.forEach(
+          (record)=>  console.log(record.get('Name')+" "+record.get('Time'))
+          //minifiedRecords= [...minifiedRecords, record.fields ]
+          );
+    });
+}
+
+
+
+
+
+
+
+
+
+
+//#########################################################################
+
+
 
 function App() {
 
@@ -321,8 +352,8 @@ function App() {
 
   useEffect(() => {
 
-    
-    console.log(d.getMonth()+"."+d.getDate());
+    getRecords();
+    //console.log(d.getMonth()+"."+d.getDate());
 
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
