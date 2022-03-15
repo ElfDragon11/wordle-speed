@@ -14,9 +14,10 @@ import {
   Row,
   ShareButton,
   LeaderBoardModal,
-  LeaderBoardRow,
+ 
 } from "./styled";
-import Timer from './Timer';
+import Timer from './components/Timer';
+import LeaderBoardRow from './components/LeaderBoardRow';
 import { BackspaceIcon } from "./icons";
 import "./App.css";
 import { useEffect, useRef, useState } from "react";
@@ -150,9 +151,9 @@ function App() {
 
   const openLeaderBoard =()=>{
     setLeaderBoardModalVisible(true);
-    for(var i = 0; i < Records.length; i++){
+   /* for(var i = 0; i < Records.length; i++){
       LeaderboadText+= (i+1)+" "+Records[i].Name +"    " + Records[i].Time + " \n";
-    }
+    }*/
   }
 
   const win = () => {
@@ -363,7 +364,7 @@ function App() {
 
 
 
-    Records = getRecords();;
+    getRecords();
 
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
@@ -585,13 +586,14 @@ function App() {
         >
           <LeaderBoardModal>
             <Heading>Leaderboard</Heading>
-            <LeaderBoardRow>
-          
-               <p id="leaders">{LeaderboadText}</p>
+            <Row>
+              {Records.forEach((record, Rankindex)=>{
+                <LeaderBoardRow RecordRow = {record} Ranking={Rankindex} />
+              })}
                 
   
              
-            </LeaderBoardRow>
+            </Row>
           </LeaderBoardModal>
         </Modal>
       </div>
