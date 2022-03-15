@@ -1,7 +1,19 @@
-#row{
+#Row{
     display: flex;
     flex-direction: row;
-    font-size:50px;
+    font-size:20px;
     margin-top: 0px;
     margin-bottom: 10px;
+    width: 100%;
+}
+#Rank{
+    margin-right: 30px;
+}
+#Time{
+    position: absolute;
+    right:20px;
+    text-align: left;
+}
+#Name{
+    margin-right: 30px;
 }

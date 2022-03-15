@@ -107,3 +107,9 @@ h4 {
 	display: flex;
 	align-self: center;
 }
+#TimeSubmit{
+	width: 100%;
+	margin-bottom: 20px;
+	display: flex;
+	justify-content: space-between;
+}

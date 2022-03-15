@@ -6,7 +6,8 @@ export default function LeaderBoardRow({RecordRow, Ranking}) {
 
    const [Row, setRow] = useState(RecordRow);
     useEffect(() => {
-    
+    console.log(Row);
+    console.log(rank);
         
     }, []);
      
