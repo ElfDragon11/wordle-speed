@@ -255,25 +255,25 @@ function App() {
     //let shareText = `Wordle ${getDayOfYear()}`;   change this
     var timeObj = JSON.parse(localStorage.getItem("wordlespeed.times")).StoredObj
     console.log(timeObj);
-    var time;
+    var time="";
     if(timeObj.TimerHours>0){
-      if(timeObj.TimerHours<0){
+      if(timeObj.TimerHours<10){
         time += "0"+timeObj.TimerHours+":";
       }else{
         time += timeObj.TimerHours+":";
       }
     }
-    if(timeObj.TimerMinutes<0){
+    if(timeObj.TimerMinutes<10){
       time += "0"+timeObj.TimerMinutes+":";
     }else{
       time += timeObj.TimerMinutes+":";
     }
-    if(timeObj.TimerSeconds<0){
+    if(timeObj.TimerSeconds<10){
       time += "0"+timeObj.TimerSeconds+".";
     }else{
       time += timeObj.TimerSeconds+".";
     }
-    if(timeObj.TimerMilliseconds<0){
+    if(timeObj.TimerMilliseconds<10){
       time += "0"+timeObj.TimerMilliseconds;
     }else{
       time += timeObj.TimerMilliseconds;
@@ -281,7 +281,7 @@ function App() {
 
     
     
-    let shareText = `Speedle ${answerIndex} /n Time: ${time} `
+    let shareText = `Speedle ${answerIndex} \nTime: ${time}\n`
     let shareGuesses = "";
 
     const amountOfGuesses = Object.entries(markers)
