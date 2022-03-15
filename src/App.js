@@ -34,10 +34,8 @@ var CBButtonValue = "Enable ColorBlind";
 var d = new Date();
 
 const dayLength = 86400000;
-const startTime = 1646895600000-(dayLength*5);
+const startTime = 1646895600000-(dayLength*6);
 var Records=[];
-var LeaderboadItems=[];
-var LeaderboadText="";
 
 const keyboardRows = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -59,9 +57,12 @@ const newGame = {
   5: Array.from({ length: wordLength }).fill(""),
 };
 
+
+
+
 //################################## API STUFF ############################
 
-var Airtable = require('airtable');
+/*var Airtable = require('airtable');
 var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
 
 const table = base('Leadboard');
@@ -71,7 +72,7 @@ const getRecords = async() =>{
     var minifiedRecords=[];
     base('Leadboard').select({ 
         sort:[{field: 'Time', direction :'asc'}]
-    }).eachPage(function page(records, fetchNextPage) {
+    }).eachPage((records) =>{
         //console.log(records);
         records.forEach((record)=>  {
           
@@ -82,12 +83,12 @@ const getRecords = async() =>{
           
           });
           Records = minifiedRecords;
-          return minifiedRecords;
+          //return minifiedRecords;
     });
 }
 
-
-/*const createRecord = async (Name) =>{
+/*
+const createRecord = async (Name) =>{
   const userName = Name;
   const Time = createTimeString();
   const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
@@ -97,8 +98,9 @@ const getRecords = async() =>{
   }else{
     let timetest1=createTimeString();
     let timetest2;
-    setTimeout( timetest2= createTimeString(), 10)
-    if(timetest1!==timetest2){
+    setTimeout( ()=>{
+      timetest2= createTimeString()
+      if(timetest1!==timetest2){
       console.log("Finish the wordle to submit");
       return;
     }else{
@@ -107,61 +109,68 @@ const getRecords = async() =>{
         return;
       }
     }
-  }
-  base('Leadboard').create([
-    {
-      "fields": {
-        "Name": userName,
-        "Time": Time,
-        "Date": date
-      }
-    }
-  ], function(err, records) {
+  
+  base('Leadboard').create({
+    "Name": userName,
+    "Time": Time,
+    "Date": date
+  }, function(err, records) {
     if (err) {
       console.error(err);
       return;
     }
 })
-}*/
+
+
+    }, 10);
+    
+}
+}
 
 
 
-
+*/
 
 
 //#########################################################################
 
-const createTimeString =()=>{
-  var timeObj = JSON.parse(localStorage.getItem("wordlespeed.times")).StoredObj
-  var time="";
-  if(timeObj.TimerHours>0){
-    if(timeObj.TimerHours<10){
-      time += "0"+timeObj.TimerHours+":";
-    }else{
-      time += timeObj.TimerHours+":";
+function createTimeString() {
+  var StoredTime = JSON.parse(localStorage.getItem("wordlespeed.times"))
+  
+  var time = "";
+  if(StoredTime){
+    var timeObj = StoredTime.StoredObj;
+    if (timeObj.TimerHours > 0) {
+      if (timeObj.TimerHours < 10) {
+        time += "0" + timeObj.TimerHours + ":";
+      } else {
+        time += timeObj.TimerHours + ":";
+      }
     }
-  }
-  if(timeObj.TimerMinutes<10){
-    time += "0"+timeObj.TimerMinutes+":";
+    if (timeObj.TimerMinutes < 10) {
+      time += "0" + timeObj.TimerMinutes + ":";
+    } else {
+      time += timeObj.TimerMinutes + ":";
+    }
+    if (timeObj.TimerSeconds < 10) {
+      time += "0" + timeObj.TimerSeconds + ".";
+    } else {
+      time += timeObj.TimerSeconds + ".";
+    }
+    if (timeObj.TimerMilliseconds < 10) {
+      time += "0" + timeObj.TimerMilliseconds;
+    } else {
+      time += timeObj.TimerMilliseconds;
+    }
+    
   }else{
-    time += timeObj.TimerMinutes+":";
+    time="00:00.00"
   }
-  if(timeObj.TimerSeconds<10){
-    time += "0"+timeObj.TimerSeconds+".";
-  }else{
-    time += timeObj.TimerSeconds+".";
-  }
-  if(timeObj.TimerMilliseconds<10){
-    time += "0"+timeObj.TimerMilliseconds;
-  }else{
-    time += timeObj.TimerMilliseconds;
-  }
-  return time
+  return time;
 }
 
 function App() {
 
-  var d = new Date();
   let answerIndex = Math.floor((d.getTime() - startTime)/dayLength)
 
   const [TimerStatus, setTimerStatus] = useState('off')
@@ -169,7 +178,7 @@ function App() {
  
   const [colorBlindMode, setcolorBlindMode]  = useState(false);
 
-  var wordOfTheDay = "money";
+  const wordOfTheDay = useRef("money");
 
   
 
@@ -194,7 +203,7 @@ function App() {
   let keyColors = useRef({key:[], color: []});
 
   const submittedRecord=()=>{
-    let userName = "Calvin Blood"//document.getElementById("NameInput").value;
+    //let userName = "Calvin Blood"//document.getElementById("NameInput").value;
     //createRecord(userName);
   }
 
@@ -242,7 +251,7 @@ function App() {
       ...markers,
     };
 
-    const tempWord = wordOfTheDay.split("");
+    const tempWord = wordOfTheDay.current.split("");
 
     const leftoverIndices = [];
 
@@ -405,7 +414,7 @@ function App() {
 
     //console.log(createTimeString());
 
-    getRecords();
+    //getRecords();
 
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
@@ -416,7 +425,7 @@ function App() {
     }
 
    
-    wordOfTheDay = listWords[answerIndex];
+    wordOfTheDay.current = listWords[answerIndex];
     const storedAnswers = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS));
     
     if(storedAnswers!=null){
@@ -482,7 +491,7 @@ function App() {
     document.addEventListener("keydown", handleKeyDown);
  
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  });
   
 
   
