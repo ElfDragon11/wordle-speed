@@ -34,7 +34,7 @@ var CBButtonValue = "Enable ColorBlind";
 var d = new Date();
 
 const dayLength = 86400000;
-const startTime = 1646895600000-(dayLength*6);
+const startTime = 1646895600000-(dayLength*2);
 var Records=[];
 
 const keyboardRows = [
@@ -62,7 +62,7 @@ const newGame = {
 
 //################################## API STUFF ############################
 
-/*var Airtable = require('airtable');
+var Airtable = require('airtable');
 var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
 
 const table = base('Leadboard');
@@ -87,11 +87,14 @@ const getRecords = async() =>{
     });
 }
 
-/*
+
 const createRecord = async (Name) =>{
   const userName = Name;
-  const Time = createTimeString();
+  console.log(userName);
+  const Time = createTimeString(1);
+  console.log(Time);
   const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
+  console.log(date);
   if(userName === ""){
     console.log("please enter your name");
     return;
@@ -103,41 +106,51 @@ const createRecord = async (Name) =>{
       if(timetest1!==timetest2){
       console.log("Finish the wordle to submit");
       return;
-    }else{
-      if(Time === "00:00.00"){
-        console.log("Finish the wordle to submit");
-        return;
+      }else{
+        if(Time === "00:00.00"){
+          console.log("Finish the wordle to submit");
+          return;
+        }
       }
-    }
   
-  base('Leadboard').create({
-    "Name": userName,
-    "Time": Time,
-    "Date": date
-  }, function(err, records) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-})
-
-
+      base('Leadboard').create({
+        "Name": userName,
+        "Time": Time,
+        "Date": date
+      }
+      /*, function(err, records) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      }*/
+      )
     }, 10);
-    
+  }
 }
-}
 
 
 
-*/
+
 
 
 //#########################################################################
 
-function createTimeString() {
+function createTimeString(type = 0) {
   var StoredTime = JSON.parse(localStorage.getItem("wordlespeed.times"))
-  
-  var time = "";
+  console.log(StoredTime);
+  var time;
+  if(type === 1){
+    time = 0;
+    if(StoredTime){
+      var timeObj = StoredTime.StoredObj;
+      time += (timeObj.TimerHours*3600)
+      time += (timeObj.TimerMinutes*60)
+      time += (timeObj.TimerSeconds)
+      time += (timeObj.TimerMilliseconds/100)
+    } 
+  }else{
+     time = "";
   if(StoredTime){
     var timeObj = StoredTime.StoredObj;
     if (timeObj.TimerHours > 0) {
@@ -166,6 +179,9 @@ function createTimeString() {
   }else{
     time="00:00.00"
   }
+
+  }
+  
   return time;
 }
 
@@ -180,7 +196,7 @@ function App() {
 
   const wordOfTheDay = useRef("money");
 
-  
+  const[boardRerender, setboardRerender] = useState(0);
 
 
   const [guesses, setGuesses] = useState({ ...newGame });
@@ -203,8 +219,10 @@ function App() {
   let keyColors = useRef({key:[], color: []});
 
   const submittedRecord=()=>{
-    //let userName = "Calvin Blood"//document.getElementById("NameInput").value;
-    //createRecord(userName);
+    let userName = document.getElementById("NameInput").value;
+    createRecord(userName);
+    getRecords();
+    
   }
 
   const colorBlindToggle = () =>{
@@ -226,9 +244,7 @@ function App() {
 
   const openLeaderBoard =()=>{
     setLeaderBoardModalVisible(true);
-   /* for(var i = 0; i < Records.length; i++){
-      LeaderboadText+= (i+1)+" "+Records[i].Name +"    " + Records[i].Time + " \n";
-    }*/
+
   }
 
   const win = () => {
@@ -410,11 +426,12 @@ function App() {
   };
 
 
+  useEffect(()=>{
+    setboardRerender(boardRerender+1);
+  },[Records])
+
   useEffect(() => {
-
-    //console.log(createTimeString());
-
-    //getRecords();
+    getRecords();
 
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
@@ -598,12 +615,14 @@ function App() {
           onRequestClose={() => setRulesModalVisible(false)}
           style={{
             content: {
-              top: "50%",
+              //top: "47%",
               left: "50%",
               right: "auto",
-              bottom: "auto",
+              //bottom: "auto",
               marginRight: "-50%",
-              transform: "translate(-50%, -50%)",
+              transform: "translate(-50%, 18%)",
+              width: "458px",
+              height: "600px",
             },
           }}
           contentLabel="Share"
@@ -624,23 +643,23 @@ function App() {
           style={{
             content: {
               //top: "47%",
-              left: "35.5%",
-             // right: "auto",
-              //bottom: "auto",*/
-              //marginRight: "-50%",
-              //transform: "translate(-50%, -50%)",
-              width: "400px",
-              //height: "400px",
+              left: "50%",
+              right: "auto",
+              //bottom: "auto",
+              marginRight: "-50%",
+              transform: "translate(-50%, 18%)",
+              width: "458px",
+              height: "600px",
             },
           }}
           contentLabel="Share"
         >
-          <LeaderBoardModal>
+          <LeaderBoardModal thingy={boardRerender}>
             <Heading>Leaderboard</Heading>
             <LBRow>
               <article id = "TimeSubmit">
                 <input id="NameInput" type="text" placeholder="Your Name"/>
-                <input type="button" value="Submit Time" onClick={submittedRecord()}/>
+                <input type="button" value="Submit Time" onClick={()=>submittedRecord()}/>
               </article>
               {Records.map((record, Rankindex)=>(
                 <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} />
