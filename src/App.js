@@ -246,6 +246,8 @@ function App() {
     document.getElementById("NameInput").value="";
     createRecord(userName);
     getRecords();
+    setLeaderBoardModalVisible(false);
+    openLeaderBoard();
     
   }
 
@@ -267,14 +269,22 @@ function App() {
 
   const openLeaderBoard =()=>{
     setLeaderBoardModalVisible(true);
-
+    getRecords();
   }
 
   const win = () => {
     document.removeEventListener("keydown", handleKeyDown);
     setTimerStatus("off")
-    streak+=1;
-    localStorage.setItem(LOCAL_STORAGE_KEY_CBTOGGLE, JSON.stringify(streak));
+    
+    let streakCookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_STREAK));
+    if(streakCookie){
+      if(streakCookie.timeSet!== d.getMonth()+"."+d.getDate()){
+        streak+=1;
+      }
+    }else{
+      streak+=1;
+    }
+    localStorage.setItem(LOCAL_STORAGE_KEY_STREAK, JSON.stringify({Obj: streak, timeSet:  d.getMonth()+"."+d.getDate()}));
     setModalVisible(true);
   };
 
@@ -410,9 +420,6 @@ function App() {
 
   const copyMarkers = () => {
     var time=createTimeString();
-
-    
-    
     let shareText = `Speedle ${answerIndex} \nTime: ${time}\n`
     let shareGuesses = "";
 
@@ -432,7 +439,6 @@ function App() {
         });
 
         shareGuesses += "\n";
-
         return "";
       });
 
@@ -461,7 +467,7 @@ function App() {
     const streakCookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_STREAK))
 
     if(streakCookie){
-      streak = streakCookie;
+      streak = streakCookie.Obj;
     }
 
     
