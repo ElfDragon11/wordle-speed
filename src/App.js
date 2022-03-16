@@ -34,7 +34,7 @@ var CBButtonValue = "Enable ColorBlind";
 var d = new Date();
 
 const dayLength = 86400000;
-const startTime = 1646895600000-(dayLength*2);
+const startTime = 1646895600000-(dayLength*6);
 
 
 const keyboardRows = [
@@ -531,11 +531,9 @@ function App() {
   
   function KeyboardKeyColor(key) {
     var i = round.current;
-    console.log("__"+i);
     if(i>5){
       i=5;
     }
-    console.log(i)
       if(Object.values(guesses)[i].indexOf(key)>=0){
         let keyMarkerIndex = Object.values(guesses)[i].indexOf(key);
         if(markers[i][keyMarkerIndex]==="green"||markers[i][keyMarkerIndex]==="yellow"||markers[i][keyMarkerIndex]==="grey"){
