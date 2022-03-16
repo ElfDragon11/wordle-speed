@@ -29,9 +29,11 @@ var started=false;
 var winStatus = "Win";
 const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
 const LOCAL_STORAGE_KEY_CBTOGGLE="wordlespeed.cbtoggle";
+const LOCAL_STORAGE_KEY_STREAK="wordlespeed.streak";
 
 var CBButtonValue = "Enable ColorBlind";
 var d = new Date();
+var streak = 0;
 
 const dayLength = 86400000;
 const startTime = 1646895600000-(dayLength*6);
@@ -192,6 +194,10 @@ function App() {
 
       const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
 
+      if(streak<2){
+        toastPage("You need a streak to submit your time Comeback tomorrow to make it on the leaderboard")
+        return;
+      }
       if(winStatus==="Lose"){
         toastPage("You need to win to submit your time")
         return;
@@ -267,6 +273,8 @@ function App() {
   const win = () => {
     document.removeEventListener("keydown", handleKeyDown);
     setTimerStatus("off")
+    streak+=1;
+    localStorage.setItem(LOCAL_STORAGE_KEY_CBTOGGLE, JSON.stringify(streak));
     setModalVisible(true);
   };
 
@@ -449,6 +457,12 @@ function App() {
 
   useEffect(() => {
     getRecords();
+
+    const streakCookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_STREAK))
+
+    if(streakCookie){
+      streak = streakCookie;
+    }
 
     
     const CBcookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_CBTOGGLE));   
@@ -642,14 +656,14 @@ function App() {
           onRequestClose={() => setRulesModalVisible(false)}
           style={{
             content: {
-              //top: "47%",
+              top: "0%",
               left: "50%",
               right: "auto",
               //bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, 18%)",
               width: "458px",
-              height: "600px",
+              height: "530px",
             },
           }}
           contentLabel="Share"
