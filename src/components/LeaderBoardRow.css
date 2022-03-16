@@ -8,12 +8,11 @@
 }
 #Rank{
     margin-right: 30px;
+    width: 20px
 }
 #Time{
     position: absolute;
     right:20px;
     text-align: left;
 }
-#Name{
-    margin-right: 30px;
-}
+

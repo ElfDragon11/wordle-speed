@@ -35,7 +35,7 @@ var d = new Date();
 
 const dayLength = 86400000;
 const startTime = 1646895600000-(dayLength*2);
-var Records=[];
+
 
 const keyboardRows = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
@@ -60,90 +60,29 @@ const newGame = {
 
 
 
-//################################## API STUFF ############################
 
-var Airtable = require('airtable');
-var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
+function toastPage(text) {
+  // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+  x.innerHTML = text;
 
-const table = base('Leadboard');
+  // Add the "show" class to DIV
+  x.className = "show";
 
-
-const getRecords = async() =>{
-    var minifiedRecords=[];
-    base('Leadboard').select({ 
-        sort:[{field: 'Time', direction :'asc'}]
-    }).eachPage((records) =>{
-        //console.log(records);
-        records.forEach((record)=>  {
-          
-         // console.log(record.get('Name')+" "+record.get('Time'));
-
-          minifiedRecords=[...minifiedRecords, record.fields];
-          console.log(minifiedRecords)
-          
-          });
-          Records = minifiedRecords;
-          //return minifiedRecords;
-    });
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 }
 
 
-const createRecord = async (Name) =>{
-  const userName = Name;
-  console.log(userName);
-  const Time = createTimeString(1);
-  console.log(Time);
-  const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
-  console.log(date);
-  if(userName === ""){
-    console.log("please enter your name");
-    return;
-  }else{
-    let timetest1=createTimeString();
-    let timetest2;
-    setTimeout( ()=>{
-      timetest2= createTimeString()
-      if(timetest1!==timetest2){
-      console.log("Finish the wordle to submit");
-      return;
-      }else{
-        if(Time === "00:00.00"){
-          console.log("Finish the wordle to submit");
-          return;
-        }
-      }
-  
-      base('Leadboard').create({
-        "Name": userName,
-        "Time": Time,
-        "Date": date
-      }
-      /*, function(err, records) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-      }*/
-      )
-    }, 10);
-  }
-}
-
-
-
-
-
-
-//#########################################################################
 
 function createTimeString(type = 0) {
   var StoredTime = JSON.parse(localStorage.getItem("wordlespeed.times"))
-  console.log(StoredTime);
   var time;
+  var timeObj;
   if(type === 1){
     time = 0;
     if(StoredTime){
-      var timeObj = StoredTime.StoredObj;
+      timeObj = StoredTime.StoredObj;
       time += (timeObj.TimerHours*3600)
       time += (timeObj.TimerMinutes*60)
       time += (timeObj.TimerSeconds)
@@ -152,7 +91,7 @@ function createTimeString(type = 0) {
   }else{
      time = "";
   if(StoredTime){
-    var timeObj = StoredTime.StoredObj;
+    timeObj = StoredTime.StoredObj;
     if (timeObj.TimerHours > 0) {
       if (timeObj.TimerHours < 10) {
         time += "0" + timeObj.TimerHours + ":";
@@ -212,14 +151,90 @@ function App() {
   const [isRulesModalVisible, setRulesModalVisible] = useState(false);
   const [isLeaderBoardModalVisible, setLeaderBoardModalVisible] = useState(false);
   const [isShared, setIsShared] = useState(false);
+  const [Records, setRecords] = useState([]);
 
   let letterIndex = useRef(0);
   let round = useRef(0);
 
   let keyColors = useRef({key:[], color: []});
 
+
+  //################################## API STUFF ############################
+
+    var Airtable = require('airtable');
+    var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
+
+    const table = base('Leadboard');
+
+
+    const getRecords = async() =>{
+        var minifiedRecords=[];
+        base('Leadboard').select({ 
+            sort:[{field: 'Time', direction :'asc'}]
+        }).eachPage((records) =>{
+           
+            records.forEach((record)=>  {
+              
+
+
+              minifiedRecords=[...minifiedRecords, record.fields];
+ 
+              });
+              setRecords(minifiedRecords);
+        });
+    }
+
+
+    const createRecord = async (Name) =>{
+      const userName = Name;
+
+      const Time = createTimeString(1);
+
+      const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
+
+      
+      if(userName === ""){
+        toastPage("Enter your name");
+        return;
+      }else{
+        let timetest1=createTimeString();
+        let timetest2;
+        setTimeout( ()=>{
+          timetest2= createTimeString()
+          if(timetest1!==timetest2){
+
+            toastPage("Finish the wordle to submit");
+          return;
+          }else{
+            if(Time === "00:00.00"){
+            
+              toastPage("Finish the wordle to submit");
+              return;
+            }
+          }
+      
+          base('Leadboard').create({
+            "Name": userName,
+            "Time": Time,
+            "Date": date
+          }, function(err, records) {
+            if (err) {
+              console.error(err);
+              toastPage(err);
+              return;
+            }
+          }
+          )
+          toastPage("Time Submited");
+        }, 10);
+      }
+    }
+
+//#########################################################################
+
   const submittedRecord=()=>{
     let userName = document.getElementById("NameInput").value;
+    document.getElementById("NameInput").value="";
     createRecord(userName);
     getRecords();
     
@@ -227,7 +242,6 @@ function App() {
 
   const colorBlindToggle = () =>{
     setcolorBlindMode(!colorBlindMode);
-    console.log(colorBlindMode);
     document.getElementById("CBtoggle").blur();
     
     if(colorBlindMode){
@@ -514,7 +528,11 @@ function App() {
   
   function KeyboardKeyColor(key) {
     var i = round.current;
-    
+    console.log("__"+i);
+    if(i>5){
+      i=5;
+    }
+    console.log(i)
       if(Object.values(guesses)[i].indexOf(key)>=0){
         let keyMarkerIndex = Object.values(guesses)[i].indexOf(key);
         if(markers[i][keyMarkerIndex]==="green"||markers[i][keyMarkerIndex]==="yellow"||markers[i][keyMarkerIndex]==="grey"){
@@ -536,7 +554,7 @@ function App() {
   return (
     <>
       <Main rerender={colorBlindMode}>
-        
+      <div id="snackbar">Some text some message..</div>
         <Header>WORDLE SPEED</Header>
         
         <div id="topBar">
@@ -605,6 +623,13 @@ function App() {
                 {isShared ? "Copied!" : "Share"}
               </ShareButton>
             </Row>
+            <Row>
+            <article id="sharetoLeaderboard" className="topBarItem"><h3 onClick={()=>{
+              setModalVisible(false);
+              setLeaderBoardModalVisible(true);
+            }}>Open Leaderboard</h3></article>
+              
+            </Row>
           </ShareModal>
         </Modal>
       </div>
@@ -642,14 +667,14 @@ function App() {
           onRequestClose={() => setLeaderBoardModalVisible(false)}
           style={{
             content: {
-              //top: "47%",
+              top: "0%",
               left: "50%",
               right: "auto",
               //bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, 18%)",
               width: "458px",
-              height: "600px",
+              height: "530px",
             },
           }}
           contentLabel="Share"
