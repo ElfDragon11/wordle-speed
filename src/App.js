@@ -624,6 +624,7 @@ function App() {
               <h3>Share Speedle</h3>
               <ShareButton onClick={copyMarkers} disabled={isShared}>
                 {isShared ? "Copied!" : "Share"}
+                
               </ShareButton>
             </Row>
             <Row>
@@ -690,7 +691,11 @@ function App() {
                 <input type="button" value="Submit Time" onClick={()=>submittedRecord()}/>
               </article>
               {Records.map((record, Rankindex)=>(
-                <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} />
+               // {if(){
+                  record.Date===(d.getMonth() +"."+d.getDate()+"."+d.getFullYear()) ? <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} /> :""
+                  
+              //}
+              
               ))}
               
             </LBRow>
