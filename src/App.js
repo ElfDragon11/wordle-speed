@@ -192,7 +192,10 @@ function App() {
 
       const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
 
-      
+      if(winStatus==="Lose"){
+        toastPage("You need to win to submit your time")
+        return;
+      }
       if(userName === ""){
         toastPage("Enter your name");
         return;
