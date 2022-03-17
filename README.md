@@ -1,4 +1,4 @@
-# Wordle
+# Wordle Speed
 
 ## Available Scripts
 
