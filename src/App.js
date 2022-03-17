@@ -632,7 +632,7 @@ function App() {
               //bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, 18%)",
-              width: "458px",
+              width: "380px",
               height: "530px",
             },
           }}
@@ -670,7 +670,7 @@ function App() {
               //bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, 18%)",
-              width: "458px",
+              width: "380px",
               height: "530px",
             },
           }}
@@ -697,7 +697,7 @@ function App() {
               //bottom: "auto",
               marginRight: "-50%",
               transform: "translate(-50%, 18%)",
-              width: "458px",
+              width: "380px",
               height: "530px",
             },
           }}
