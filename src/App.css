@@ -79,7 +79,7 @@ h4 {
 	font-size: 16px;
 }
 #topBar{
-	margin-top: 5px;
+	/*margin-top: 5px;*/
 	width:100%;
 	display: flex;
 	justify-content:space-between;
@@ -92,15 +92,26 @@ h4 {
 	display: flex;
 	flex-direction: column;
     align-items: center;
+	padding: 5px;
 }
+
 
 #RulesLinkContainter{
 	display: flex;
-	align-self: center;
+	padding-top: 8px;
+	/*align-self: center;*/
+}
+
+#RulesLinkContainter:hover{
+	background-color: rgb(209, 209, 209);
 }
 #LeaderboardLinkContainter{
+	padding-top: 8px;
 	display: flex;
-	align-self: center;
+	/*align-self: center;*/
+}
+#LeaderboardLinkContainter:hover{
+	background-color: rgb(209, 209, 209);
 }
 
 #CBContainer{
@@ -117,6 +128,9 @@ h4 {
 #sharetoLeaderboard{
 	text-align: center;
 	width:100%;
+}
+#sharetoLeaderboard h3:hover{
+	background-color: rgb(209, 209, 209);
 }
 
 /*from w3 schools*/
