@@ -142,6 +142,16 @@ h4 {
 	width: 100%;
 	text-align: left;
 }
+a{
+	color: black;
+}
+a:clicked{
+	color: black;
+}
+#imgContainer{
+	width: 100%;
+	text-align: center;
+}
 
 /*from w3 schools*/
 /* The snackbar - position it at the bottom and in the middle of the screen */

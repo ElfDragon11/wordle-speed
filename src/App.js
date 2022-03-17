@@ -24,6 +24,7 @@ import "./App.css";
 import { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { listWords, validWords } from './listWords';
+import qrcode from './qrcode.png';
 
 var started=false;
 var winStatus = "Win";
@@ -380,6 +381,7 @@ function App() {
     if(!started){
       started=true;
       setTimerStatus("running")
+
     }
     
     const _letterIndex = letterIndex.current;
@@ -459,9 +461,23 @@ function App() {
       enterGuess(pressedKey);
     }
   };
+  useEffect(()=>{
+    if(guesses[round.current][4]!==""){
+      const collection= document.getElementsByClassName(round.current);
+      if(!(validWords.includes(guesses[round.current].join(""))||listWords.includes(guesses[round.current].join("")))){
+        for(var i=0; i< collection.length;i++){
+          collection[i].style.color="red";
+        }
+      }
+    }else if(guesses[round.current][3]!==""){
+      const collection= document.getElementsByClassName(round.current);
+      for(var i=0; i< collection.length;i++){
+        collection[i].style.color="black";
+      } 
+    }
+  },[guesses])
 
-
-
+ 
   useEffect(() => {
     getRecords();
 
@@ -525,15 +541,6 @@ function App() {
             setTimeout(function() {
               handleClick("enter");
             }, 1);
-        
-          /*
-            handleClick(l0);
-            handleClick(l1);
-            handleClick(l2);
-            handleClick(l3);
-            handleClick(l4);
-            handleClick("enter");
-          */
           }
         });
    
@@ -577,7 +584,7 @@ function App() {
     <>
       <Main rerender={colorBlindMode}>
       <div id="snackbar">Some text some message..</div>
-        <Header>WORDLE SPEED</Header>
+        <Header>WORDLE BUT FAST</Header>
         
         <div id="topBar">
           <article id="RulesLinkContainter" className="topBarItem"><p id="LinkContainter" onClick={()=> openRules()}>Rules</p></article>
@@ -593,7 +600,7 @@ function App() {
           {Object.values(guesses).map((word, wordIndex) => (
               <TileRow key={wordIndex}>
               {word.map((letter, i) => (
-                <Tile key={i} hint={markers[wordIndex][i]} CB={colorBlindMode}>
+                <Tile className={wordIndex} key={i} hint={markers[wordIndex][i]} CB={colorBlindMode}>
                   {letter}
                 </Tile>
               ))}
@@ -660,6 +667,18 @@ function App() {
             }}>Open Leaderboard</h3></article>
               
             </Row>
+            <Row>
+              <h3>Help us Choose a Name!</h3>
+              <a target="blank" href="https://tallymarkpoll.appgyverapp.com/page.Page8?Poll_ID=YStGgaN71HrkvO1Iads7&Answered=n&FromQR=y">
+              <ShareButton> Vote </ShareButton>
+              </a>
+            </Row>
+
+            <Row>
+              <article id="imgContainer"><img src={qrcode} alt="QrCode to TallMark Poll" width="150px" /></article>
+              
+            </Row>
+           
           </ShareModal>
         </Modal>
       </div>
