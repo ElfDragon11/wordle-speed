@@ -35,8 +35,9 @@ var CBButtonValue = "Enable ColorBlind";
 var d = new Date();
 var streak = 0;
 
+
 const dayLength = 86400000;
-const startTime = 1646895600000-(dayLength*6);
+const startTime = 1646895600000-(dayLength*7);
 
 
 const keyboardRows = [
@@ -170,9 +171,11 @@ function App() {
 
 
     const getRecords = async() =>{
+        const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
         var minifiedRecords=[];
         base('Leadboard').select({ 
-            sort:[{field: 'Time', direction :'asc'}]
+            sort:[{field: 'Time', direction :'asc'}],
+            filterByFormula: "({Date} = '"+date+"')"
         }).eachPage((records) =>{
            
             records.forEach((record)=>  {
@@ -195,7 +198,7 @@ function App() {
       const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
 
       if(streak<2){
-        toastPage("You need a streak to submit your time Comeback tomorrow to make it on the leaderboard")
+        toastPage("Come back tomorrow to submit your time")
         return;
       }
       if(winStatus==="Lose"){
@@ -246,6 +249,7 @@ function App() {
     document.getElementById("NameInput").value="";
     createRecord(userName);
     getRecords();
+    
     setLeaderBoardModalVisible(false);
     openLeaderBoard();
     
@@ -457,9 +461,6 @@ function App() {
   };
 
 
-  useEffect(()=>{
-    setboardRerender(boardRerender+1);
-  },[Records])
 
   useEffect(() => {
     getRecords();
@@ -646,6 +647,11 @@ function App() {
                 {isShared ? "Copied!" : "Share"}
                 
               </ShareButton>
+
+            </Row>
+            <Row>
+              <h3 id="StreakSpot">Streak: {streak}</h3>
+              
             </Row>
             <Row>
             <article id="sharetoLeaderboard" className="topBarItem"><h3 onClick={()=>{
@@ -679,7 +685,7 @@ function App() {
           <ShareModal>
             <Heading>Rules</Heading>
              <Row>
-               <p>Same rules as Wordle, but get the fastest time <br /> you can. Hope you know what your doing.</p>
+               <p>Same rules as Wordle, but get the fastest time you can. <br /><br />Hope you know what your doing.<br /><br /> You need a streak of at least 2 to submit your time. </p>
              </Row>
           </ShareModal>
         </Modal>
@@ -711,11 +717,7 @@ function App() {
                 <input type="button" value="Submit Time" onClick={()=>submittedRecord()}/>
               </article>
               {Records.map((record, Rankindex)=>(
-               // {if(){
-                  record.Date===(d.getMonth() +"."+d.getDate()+"."+d.getFullYear()) ? <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} /> :""
-                  
-              //}
-              
+                <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} thingy={boardRerender}/> 
               ))}
               
             </LBRow>
