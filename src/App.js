@@ -31,6 +31,7 @@ var winStatus = "Win";
 const LOCAL_STORAGE_KEY_ANSWERED_WORDS="wordlespeed.answers";
 const LOCAL_STORAGE_KEY_CBTOGGLE="wordlespeed.cbtoggle";
 const LOCAL_STORAGE_KEY_STREAK="wordlespeed.streak";
+const LOCAL_STORAGE_KEY_SUBMITTED="wordlespeed.submittted";
 
 var CBButtonValue = "Enable ColorBlind";
 var d = new Date();
@@ -169,10 +170,10 @@ function App() {
     var base = new Airtable({apiKey: 'keyJDr9KDV6FXZ1aB'}).base('appt5KHLzOgSsIYjB');
 
     const table = base('Leadboard');
-
+    const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
 
     const getRecords = async() =>{
-        const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
+
         var minifiedRecords=[];
         base('Leadboard').select({ 
             sort:[{field: 'Time', direction :'asc'}],
@@ -196,7 +197,7 @@ function App() {
 
       const Time = createTimeString(1);
 
-      const date = d.getMonth() +"."+d.getDate()+"."+d.getFullYear();
+     
 
       if(streak<2){
         toastPage("Come back tomorrow to submit your time")
@@ -246,13 +247,25 @@ function App() {
 //#########################################################################
 
   const submittedRecord=()=>{
-    let userName = document.getElementById("NameInput").value;
-    document.getElementById("NameInput").value="";
-    createRecord(userName);
-    getRecords();
+    const STCookie = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_SUBMITTED));
+    if(STCookie){
+      if(STCookie.TimeSet!==d.getMonth()+"."+d.getDate()){
+        localStorage.removeItem(LOCAL_STORAGE_KEY_SUBMITTED)
+        submittedRecord();
+      }else{
+        toastPage("You have already submitted Today")
+      }
+    }else{
+      let userName = document.getElementById("NameInput").value;
+      document.getElementById("NameInput").value="";
+      createRecord(userName);
+      getRecords();
     
-    setLeaderBoardModalVisible(false);
-    openLeaderBoard();
+      setLeaderBoardModalVisible(false);
+      openLeaderBoard();
+      localStorage.setItem(LOCAL_STORAGE_KEY_SUBMITTED,JSON.stringify({str:true,TimeSet:d.getMonth()+"."+d.getDate()}))
+    }
+    
     
   }
 
@@ -649,12 +662,14 @@ function App() {
           <ShareModal>
             <Heading>You {winStatus}!</Heading>
             <Row>
+            <h3>Speedle of the Day:  {wordOfTheDay.current}</h3>
+
+            </Row>
+            <Row>
               <h3>Share Speedle</h3>
               <ShareButton onClick={copyMarkers} disabled={isShared}>
                 {isShared ? "Copied!" : "Share"}
-                
               </ShareButton>
-
             </Row>
             <Row>
               <h3 id="StreakSpot">Streak: {streak}</h3>
