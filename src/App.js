@@ -253,7 +253,7 @@ function App() {
         localStorage.removeItem(LOCAL_STORAGE_KEY_SUBMITTED)
         submittedRecord();
       }else{
-        toastPage("You have already submitted Today")
+        toastPage("You have already submitted today")
       }
     }else{
       let userName = document.getElementById("NameInput").value;
