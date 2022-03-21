@@ -462,7 +462,7 @@ function App() {
       });
 
     shareText += ` ${amountOfGuesses.length}/6\n${shareGuesses}`;
-
+    console.log(shareText);
     navigator.clipboard.writeText(shareText);
     setIsShared(true);
   };
