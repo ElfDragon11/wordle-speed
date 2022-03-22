@@ -152,6 +152,7 @@ function App() {
     4: Array.from({ length: wordLength }).fill(""),
     5: Array.from({ length: wordLength }).fill(""),
   });
+  const [keyboard, setKeyboard] = useState({ ...keyboardRows});
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRulesModalVisible, setRulesModalVisible] = useState(false);
   const [isLeaderBoardModalVisible, setLeaderBoardModalVisible] = useState(false);
@@ -339,6 +340,7 @@ function App() {
 
     if (updatedMarkers[_round].every((guess) => guess === "green")) {
       setMarkers(updatedMarkers);
+      setKeyboard(keyboard);
       localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify({guessObj: guesses, timeSet: d.getMonth()+"."+d.getDate()}))
       win();
       return;
@@ -367,6 +369,7 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify({guessObj: guesses, timeSet: d.getMonth()+"."+d.getDate()}))
     
     setMarkers(updatedMarkers);
+    setKeyboard(keyboard);
     round.current = _round + 1;
     if(round.current===6){
       lose();
