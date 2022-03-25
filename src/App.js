@@ -318,7 +318,7 @@ function App() {
   };
 
   const submit = () => {
-
+    console.log("this")
     const _round = round.current;
 
     const updatedMarkers = {
@@ -436,9 +436,9 @@ function App() {
 
 
   const handleClick = (key) => {
-    const pressedKey = key.toLowerCase();
+    //const pressedKey = key;
 
-    enterGuess(pressedKey);
+    enterGuess(key);
   };
 
   const copyMarkers = () => {
@@ -584,7 +584,7 @@ function App() {
       if(Object.values(guesses)[i].indexOf(key)>=0){
         console.log("here 1", key,i);
         let keyMarkerIndex = Object.values(guesses)[i].indexOf(key);
-        console.log(keyMarkerIndex);
+        console.log(keyMarkerIndex,markers[i][keyMarkerIndex]);
         if(markers[i][keyMarkerIndex]==="green"||markers[i][keyMarkerIndex]==="yellow"||markers[i][keyMarkerIndex]==="grey"){
           console.log("here 2", key);
           if(keyColors.current.key.includes(key)){
@@ -632,7 +632,7 @@ function App() {
             ))}
           </TileContainer>
         </GameSection>
-        <KeyboardSection >
+        <KeyboardSection rerender={keyboard}>
           {keyboardRows.map((keys, i) => (
             <KeyboardRow key={i}>
               {i === 1 && <Flex item={0.5} />}
@@ -641,7 +641,7 @@ function App() {
                   hint={KeyboardKeyColor(key)} 
                   CB={colorBlindMode}
                   key={key}
-                  onClick={()=> handleClick(key)}
+                  onClick={key==="enter" ? ()=> setTimeout(function() {handleClick("enter");}, 1) : ()=> handleClick(key)} //Don't know why this works but it does. added timout function to enter key
                   flex={["enter", "backspace"].includes(key) ? 1.5 : 1}
                 >
                   {key === "backspace" ? <BackspaceIcon /> : key}
