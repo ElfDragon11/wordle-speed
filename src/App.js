@@ -140,7 +140,9 @@ function App() {
 
   const wordOfTheDay = useRef("money");
 
-  const[boardRerender, setboardRerender] = useState(0);
+
+
+  const[LboardRerender, setLboardRerender] = useState(0);
 
 
   const [guesses, setGuesses] = useState({ ...newGame });
@@ -272,6 +274,7 @@ function App() {
 
   const colorBlindToggle = () =>{
     setcolorBlindMode(!colorBlindMode);
+
     document.getElementById("CBtoggle").blur();
     
     if(colorBlindMode){
@@ -315,6 +318,7 @@ function App() {
   };
 
   const submit = () => {
+
     const _round = round.current;
 
     const updatedMarkers = {
@@ -419,11 +423,8 @@ function App() {
 
     if (pressedKey === "enter" && letterIndex.current===5) {
      
-      if(validWords.includes(guesses[round.current].join(""))){
+      if(validWords.includes(guesses[round.current].join(""))||listWords.includes(guesses[round.current].join(""))){
         submit();
-      }else if(listWords.includes(guesses[round.current].join(""))){
-        submit();
-        
       }
  
     } else if (pressedKey === "backspace") {
@@ -531,11 +532,12 @@ function App() {
       var guessesMadeArray = Object.values(guessesMade);
       guessesMadeArray.forEach((Word) => {
 
-          var l0 = (Word[0]);
-          var l1 = (Word[1]);
-          var l2 = (Word[2]);
-          var l3 = (Word[3]);
-          var l4 = (Word[4]);
+          var l0 = (Word[0]).toLowerCase();
+          var l1 = (Word[1]).toLowerCase();
+          var l2 = (Word[2]).toLowerCase();
+          var l3 = (Word[3]).toLowerCase();
+          var l4 = (Word[4]).toLowerCase()
+          console.log(l0,l1,l2,l3,l4);
 
           if(l0!=='' && l1!=='' && l2!=='' && l3!=='' && l4!==''){
             
@@ -574,15 +576,21 @@ function App() {
 
   
   function KeyboardKeyColor(key) {
+    
     var i = round.current;
     if(i>5){
       i=5;
     }
       if(Object.values(guesses)[i].indexOf(key)>=0){
+        console.log("here 1", key,i);
         let keyMarkerIndex = Object.values(guesses)[i].indexOf(key);
+        console.log(keyMarkerIndex);
         if(markers[i][keyMarkerIndex]==="green"||markers[i][keyMarkerIndex]==="yellow"||markers[i][keyMarkerIndex]==="grey"){
+          console.log("here 2", key);
           if(keyColors.current.key.includes(key)){
+            console.log("here 3", key);
             if(keyColors.current.color[keyColors.current.key.indexOf(key)] !=="green"){
+              console.log("here 4", key);
               keyColors.current.color[keyColors.current.key.indexOf(key)] = markers[i][keyMarkerIndex];
             }
           }else{
@@ -598,7 +606,7 @@ function App() {
 
   return (
     <>
-      <Main rerender={colorBlindMode}>
+      <Main>
       <div id="snackbar">Some text some message..</div>
         <Header>WORDLE BUT FAST</Header>
         
@@ -633,7 +641,7 @@ function App() {
                   hint={KeyboardKeyColor(key)} 
                   CB={colorBlindMode}
                   key={key}
-                  onClick={() => handleClick(key)}
+                  onClick={()=> handleClick(key)}
                   flex={["enter", "backspace"].includes(key) ? 1.5 : 1}
                 >
                   {key === "backspace" ? <BackspaceIcon /> : key}
@@ -746,7 +754,7 @@ function App() {
           }}
           contentLabel="Share"
         >
-          <LeaderBoardModal thingy={boardRerender}>
+          <LeaderBoardModal thingy={LboardRerender}>
             <Heading>Leaderboard</Heading>
             <LBRow>
               <article id = "TimeSubmit">
@@ -754,7 +762,7 @@ function App() {
                 <input type="button" value="Submit Time" onClick={()=>submittedRecord()}/>
               </article>
               {Records.map((record, Rankindex)=>(
-                <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} thingy={boardRerender}/> 
+                <LeaderBoardRow key={Rankindex} RecordRow = {record} Ranking={Rankindex} thingy={LboardRerender}/> 
               ))}
               
             </LBRow>
