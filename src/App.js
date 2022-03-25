@@ -154,7 +154,7 @@ function App() {
     4: Array.from({ length: wordLength }).fill(""),
     5: Array.from({ length: wordLength }).fill(""),
   });
-  const [keyboard, setKeyboard] = useState({ ...keyboardRows});
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [isRulesModalVisible, setRulesModalVisible] = useState(false);
   const [isLeaderBoardModalVisible, setLeaderBoardModalVisible] = useState(false);
@@ -318,7 +318,6 @@ function App() {
   };
 
   const submit = () => {
-    console.log("this")
     const _round = round.current;
 
     const updatedMarkers = {
@@ -344,7 +343,7 @@ function App() {
 
     if (updatedMarkers[_round].every((guess) => guess === "green")) {
       setMarkers(updatedMarkers);
-      setKeyboard(keyboard);
+
       localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify({guessObj: guesses, timeSet: d.getMonth()+"."+d.getDate()}))
       win();
       return;
@@ -373,7 +372,7 @@ function App() {
     localStorage.setItem(LOCAL_STORAGE_KEY_ANSWERED_WORDS,JSON.stringify({guessObj: guesses, timeSet: d.getMonth()+"."+d.getDate()}))
     
     setMarkers(updatedMarkers);
-    setKeyboard(keyboard);
+
     round.current = _round + 1;
     if(round.current===6){
       lose();
@@ -537,28 +536,38 @@ function App() {
           var l2 = (Word[2]).toLowerCase();
           var l3 = (Word[3]).toLowerCase();
           var l4 = (Word[4]).toLowerCase()
-          console.log(l0,l1,l2,l3,l4);
+
 
           if(l0!=='' && l1!=='' && l2!=='' && l3!=='' && l4!==''){
-            
+            /*
+            handleClick(l0);
+            handleClick(l1);
+            handleClick(l2);
+            handleClick(l3);
+            handleClick(l4);
+            handleClick("enter"); 
+           
+            this doesn't work for some reason. I have no idea why
+*/
             setTimeout(function() {
               handleClick(l0);
-            }, 1);
+            }, 0);
             setTimeout(function() {
               handleClick(l1);
-            }, 1);
+            }, 0);
             setTimeout(function() {
               handleClick(l2);
-            }, 1);
+            }, 0);
             setTimeout(function() {
               handleClick(l3);
-            }, 1);
+            }, 0);
             setTimeout(function() {
               handleClick(l4);
-            }, 1);
+            }, 0);
             setTimeout(function() {
               handleClick("enter");
-            }, 1);
+            }, 0);
+            
           }
         });
    
@@ -582,15 +591,15 @@ function App() {
       i=5;
     }
       if(Object.values(guesses)[i].indexOf(key)>=0){
-        console.log("here 1", key,i);
+        
         let keyMarkerIndex = Object.values(guesses)[i].indexOf(key);
-        console.log(keyMarkerIndex,markers[i][keyMarkerIndex]);
+
         if(markers[i][keyMarkerIndex]==="green"||markers[i][keyMarkerIndex]==="yellow"||markers[i][keyMarkerIndex]==="grey"){
-          console.log("here 2", key);
+
           if(keyColors.current.key.includes(key)){
-            console.log("here 3", key);
+
             if(keyColors.current.color[keyColors.current.key.indexOf(key)] !=="green"){
-              console.log("here 4", key);
+
               keyColors.current.color[keyColors.current.key.indexOf(key)] = markers[i][keyMarkerIndex];
             }
           }else{
@@ -632,7 +641,7 @@ function App() {
             ))}
           </TileContainer>
         </GameSection>
-        <KeyboardSection rerender={keyboard}>
+        <KeyboardSection >
           {keyboardRows.map((keys, i) => (
             <KeyboardRow key={i}>
               {i === 1 && <Flex item={0.5} />}
@@ -641,7 +650,7 @@ function App() {
                   hint={KeyboardKeyColor(key)} 
                   CB={colorBlindMode}
                   key={key}
-                  onClick={key==="enter" ? ()=> setTimeout(function() {handleClick("enter");}, 1) : ()=> handleClick(key)} //Don't know why this works but it does. added timout function to enter key
+                  onClick={key==="enter" ? ()=> setTimeout(function() {handleClick("enter");}, 0) : ()=> handleClick(key)} //Don't know why this works but it does. added timout function to enter key
                   flex={["enter", "backspace"].includes(key) ? 1.5 : 1}
                 >
                   {key === "backspace" ? <BackspaceIcon /> : key}
