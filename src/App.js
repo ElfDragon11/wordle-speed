@@ -464,7 +464,8 @@ function App() {
         return "";
       });
 
-    shareText += ` ${amountOfGuesses.length}/6\n${shareGuesses}`;
+    shareText += `${amountOfGuesses.length}/6\n${shareGuesses}`;
+    shareText += `https://wordlespeed.herokuapp.com/`
     console.log(shareText);
     navigator.clipboard.writeText(shareText);
     setIsShared(true);
