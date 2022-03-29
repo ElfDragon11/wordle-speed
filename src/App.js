@@ -456,7 +456,7 @@ function App() {
           } else if (guess === "yellow") {
             shareGuesses += "🟨";
           } else {
-            shareGuesses += "⬛️";
+            shareGuesses += "⬛";
           }
         });
 
