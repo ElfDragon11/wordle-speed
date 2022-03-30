@@ -8,6 +8,7 @@ var hours=0;
 var minutes=0;
 var seconds=0;
 var milliseconds=0;
+var hidden= false;
 
 var timer;
 
@@ -62,7 +63,7 @@ export default function Timer({status}) {
      
     return (
 
-        <div id="Timer">
+        <div id="Timer" onClick={()=> HideTimer()}>
            
             <p id="minutes">00</p>
             <p id="colon">:</p>
@@ -75,6 +76,16 @@ export default function Timer({status}) {
     );
 }
 
+var HideTimer = function(){
+    if(!hidden){
+        $("Timer").style.color="white"
+        hidden = true;
+    }else{
+        $("Timer").style.color="black"
+        hidden= false;
+    }
+    
+}
 
 var updateTime = function() {
     if(milliseconds===99){
