@@ -651,6 +651,7 @@ function App() {
                   CB={colorBlindMode}
                   key={key}
                   onClick={key==="enter" ? ()=> setTimeout(function() {handleClick("enter");}, 0) : ()=> handleClick(key)} //Don't know why this works but it does. added timout function to enter key
+                 
                   flex={["enter", "backspace"].includes(key) ? 1.5 : 1}
                 >
                   {key === "backspace" ? <BackspaceIcon /> : key}
