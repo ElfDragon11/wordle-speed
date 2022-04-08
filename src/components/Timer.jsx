@@ -143,4 +143,8 @@ var stopClock = function(){
     //this.props.timerStop(minutes+":"+seconds+"."+milliseconds);
     
 }
+window.onblur = function() {
+    minutes++;
+    minutes++;
+};
 
