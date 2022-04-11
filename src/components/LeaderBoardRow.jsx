@@ -5,9 +5,7 @@ export default function LeaderBoardRow({RecordRow, Ranking}) {
    const [rank, setRank] = useState(Ranking);
    const [Row, setRow] = useState(RecordRow);
    var time= Row.Time+"";
-  /* if(rank<9){
-       document.getElementById("Name").style.marginLeft="5px;"
-   }*/
+
 
    String.prototype.toHHMMSS = function () {
     var sec_num = parseInt(this,10); // don't forget the second param

@@ -200,8 +200,6 @@ function App() {
 
       const Time = createTimeString(1);
 
-     
-
       if(streak<2){
         toastPage("Come back tomorrow to submit your time")
         return;
@@ -255,6 +253,7 @@ function App() {
       if(STCookie.TimeSet!==d.getMonth()+"."+d.getDate()){
         localStorage.removeItem(LOCAL_STORAGE_KEY_SUBMITTED)
         submittedRecord();
+        return;
       }else{
         toastPage("You have already submitted today")
       }
@@ -263,7 +262,7 @@ function App() {
       document.getElementById("NameInput").value="";
       createRecord(userName);
       getRecords();
-    
+      setLboardRerender("a");
       setLeaderBoardModalVisible(false);
       openLeaderBoard();
       localStorage.setItem(LOCAL_STORAGE_KEY_SUBMITTED,JSON.stringify({str:true,TimeSet:d.getMonth()+"."+d.getDate()}))

@@ -90,7 +90,7 @@ var HideTimer = function(){
 var updateTime = function() {
     if(milliseconds===99){
         if(seconds===59){
-            if(minutes===59){
+            if(minutes<60){
                 if(hours===23){
                     stopClock();
                     hours=0;
@@ -100,7 +100,6 @@ var updateTime = function() {
                 minutes=0;
             }else{
                 minutes++;
-               
             }
             if(minutes<10){
                 $("minutes").innerHTML="0"+minutes;
@@ -132,19 +131,20 @@ var updateTime = function() {
 
 
 var startClock = function(){
-
-
-    timer = setInterval(updateTime, 10);
-   
+    timer = setInterval(updateTime, 10); 
 };
 
 var stopClock = function(){
     clearInterval(timer);
-    //this.props.timerStop(minutes+":"+seconds+"."+milliseconds);
     
 }
 window.onblur = function() {
     minutes++;
     minutes++;
+    if(minutes<10){
+        $("minutes").innerHTML="0"+minutes;
+    }else{
+        $("minutes").innerHTML=minutes;
+    }
 };
 
