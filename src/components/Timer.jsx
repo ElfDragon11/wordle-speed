@@ -146,5 +146,10 @@ var stopClock = function(){
 window.onblur = function() {
     minutes++;
     minutes++;
+    if(minutes<10){
+        $("minutes").innerHTML="0"+minutes;
+    }else{
+        $("minutes").innerHTML=minutes;
+    }
 };
 
