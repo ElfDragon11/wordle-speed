@@ -308,6 +308,7 @@ function App() {
     }
     localStorage.setItem(LOCAL_STORAGE_KEY_STREAK, JSON.stringify({Obj: streak, timeSet:  d.getMonth()+"."+d.getDate()}));
     setModalVisible(true);
+    document.getElementById("Timer").style.color="black"
   };
 
   const lose = () => {
@@ -456,7 +457,7 @@ function App() {
           } else if (guess === "yellow") {
             shareGuesses += "🟨";
           } else {
-            shareGuesses += "⬛️";
+            shareGuesses += "⬛";
           }
         });
 
@@ -464,7 +465,8 @@ function App() {
         return "";
       });
 
-    shareText += ` ${amountOfGuesses.length}/6\n${shareGuesses}`;
+    shareText += `${amountOfGuesses.length}/6\n${shareGuesses}`;
+    shareText += `https://wordlespeed.herokuapp.com/`
     console.log(shareText);
     navigator.clipboard.writeText(shareText);
     setIsShared(true);
@@ -740,7 +742,7 @@ function App() {
           <ShareModal>
             <Heading>Rules</Heading>
              <Row>
-               <p>Same rules as Wordle, but get the fastest time you can. <br /><br />Hope you know what your doing.<br /><br /> You need a streak of at least 2 to submit your time. </p>
+               <p>Same rules as Wordle, but get the fastest time you can. <br /><br />Hope you know what your doing.<br /><br /> You need a streak of at least 2 to submit your time. <br /><br /> Click on the timer to hide it </p>
              </Row>
           </ShareModal>
         </Modal>
