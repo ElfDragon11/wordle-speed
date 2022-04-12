@@ -90,7 +90,7 @@ var HideTimer = function(){
 var updateTime = function() {
     if(milliseconds===99){
         if(seconds===59){
-            if(minutes<60){
+            if(minutes>=59){
                 if(hours===23){
                     stopClock();
                     hours=0;
